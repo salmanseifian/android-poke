@@ -1,6 +1,7 @@
 package com.salmanseifian.androidpoke.di
 
 import com.salmanseifian.androidpoke.data.remote.PokeService
+import com.salmanseifian.androidpoke.utils.Constants.POKE_API_URL
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -16,7 +17,7 @@ object NetworkModule {
     @Singleton
     @Provides
     fun provideRetrofitService(): PokeService = Retrofit.Builder()
-        .baseUrl(PokeService.POKE_API_URL)
+        .baseUrl(POKE_API_URL)
         .addConverterFactory(GsonConverterFactory.create())
         .build()
         .create(PokeService::class.java)
