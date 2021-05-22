@@ -1,4 +1,4 @@
-package com.salmanseifian.androidpoke.data
+package com.salmanseifian.androidpoke.data.repository
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
