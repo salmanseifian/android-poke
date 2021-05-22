@@ -3,10 +3,15 @@ package com.salmanseifian.androidpoke.data.repository
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
+import com.salmanseifian.androidpoke.data.Resource
+import com.salmanseifian.androidpoke.data.model.PokemonDetailsResponse
 import com.salmanseifian.androidpoke.data.model.PokemonSpecies
 import com.salmanseifian.androidpoke.data.remote.PokeService
 import com.salmanseifian.androidpoke.utils.NETWORK_PAGE_SIZE
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.withContext
+import retrofit2.HttpException
 import javax.inject.Inject
 
 class RemotePokeRepository @Inject constructor(private val pokeService: PokeService) :
@@ -23,5 +28,26 @@ class RemotePokeRepository @Inject constructor(private val pokeService: PokeServ
                 PokemonSpeciesDataSource(pokeService)
             }
         ).flow
+    }
+
+    override suspend fun getPokemonDetails(id: Int): Resource<PokemonDetailsResponse> {
+        return withContext(Dispatchers.IO) {
+            try {
+                Resource.Success(pokeService.getPokemonDetails(id))
+            } catch (throwable: Throwable) {
+                when (throwable) {
+                    is HttpException -> {
+                        Resource.Failure(
+                            false,
+                            throwable.code(),
+                            throwable.response()?.errorBody()
+                        )
+                    }
+                    else -> {
+                        Resource.Failure(true, null, null)
+                    }
+                }
+            }
+        }
     }
 }

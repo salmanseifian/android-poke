@@ -2,7 +2,6 @@ package com.salmanseifian.androidpoke.data.remote
 
 import com.salmanseifian.androidpoke.data.model.PokemonDetailsResponse
 import com.salmanseifian.androidpoke.data.model.PokemonSpeciesResponse
-import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -16,5 +15,5 @@ interface PokeService {
     ): PokemonSpeciesResponse
 
     @GET("v2/pokemon-species/{id}/")
-    suspend fun getPokemonDetails(@Path("id") id: String ): PokemonDetailsResponse
+    suspend fun getPokemonDetails(@Path("id") id: Int): PokemonDetailsResponse
 }
