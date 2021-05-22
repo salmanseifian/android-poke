@@ -5,8 +5,11 @@ import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.salmanseifian.androidpoke.data.model.PokemonSpecies
 import com.salmanseifian.androidpoke.databinding.ItemPokemonSpeciesBinding
+import com.salmanseifian.androidpoke.utils.createImageUrl
+import com.salmanseifian.androidpoke.utils.getSpeciesId
 
 
 class PokemonSpeciesAdapter(private val clicked: (String?) -> Unit) :
@@ -14,10 +17,8 @@ class PokemonSpeciesAdapter(private val clicked: (String?) -> Unit) :
         PokemonSpeciesDiffCallback()
     ) {
 
-
     override fun onBindViewHolder(holder: PlayersViewHolder, position: Int) {
         val data = getItem(position)
-
         holder.bind(data)
     }
 
@@ -40,6 +41,7 @@ class PokemonSpeciesAdapter(private val clicked: (String?) -> Unit) :
                     clicked.invoke(data?.url)
                 }
                 it.txtName.text = data?.name
+                Glide.with(it.root.context).load(createImageUrl(getSpeciesId(data?.url))).into(it.img)
             }
 
         }
