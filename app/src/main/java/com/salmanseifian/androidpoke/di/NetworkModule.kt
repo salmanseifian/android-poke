@@ -1,7 +1,7 @@
 package com.salmanseifian.androidpoke.di
 
 import com.salmanseifian.androidpoke.data.remote.PokeService
-import com.salmanseifian.androidpoke.utils.Constants.POKE_API_URL
+import com.salmanseifian.androidpoke.utils.POKE_API_URL
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -15,7 +15,6 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
-
     private val loggingInterceptor =
         HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BASIC)
 

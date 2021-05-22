@@ -4,7 +4,7 @@ import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.salmanseifian.androidpoke.data.model.PokemonSpecies
 import com.salmanseifian.androidpoke.data.remote.PokeService
-import com.salmanseifian.androidpoke.utils.Constants.STARTING_OFFSET_INDEX
+import com.salmanseifian.androidpoke.utils.STARTING_OFFSET_INDEX
 import retrofit2.HttpException
 import java.io.IOException
 import javax.inject.Inject
