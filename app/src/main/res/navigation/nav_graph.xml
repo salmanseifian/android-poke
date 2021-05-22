@@ -6,6 +6,6 @@
     
     <fragment
         android:id="@+id/pokemonSpeciesFragment"
-        android:name="com.salmanseifian.androidpoke.ui.PokemonSpeciesFragment" />
+        android:name="com.salmanseifian.androidpoke.ui.pokemonlist.PokemonSpeciesFragment" />
 
 </navigation>

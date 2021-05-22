@@ -1,4 +1,4 @@
-package com.salmanseifian.androidpoke.ui
+package com.salmanseifian.androidpoke.ui.pokemonlist
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
