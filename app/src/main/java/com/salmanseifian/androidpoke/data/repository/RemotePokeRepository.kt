@@ -13,7 +13,7 @@ class RemotePokeRepository @Inject constructor(private val pokeService: PokeServ
 
     override fun getAllPokemonSpecies(): Flow<PagingData<PokemonSpecies>> {
         return Pager(
-            config = PagingConfig(enablePlaceholders = false, pageSize = NETWORK_PAGE_SIZE),
+            config = PagingConfig(enablePlaceholders = false, pageSize = NETWORK_PAGE_SIZE, initialLoadSize = NETWORK_PAGE_SIZE),
             pagingSourceFactory = {
                 PokemonSpeciesDataSource(pokeService)
             }
