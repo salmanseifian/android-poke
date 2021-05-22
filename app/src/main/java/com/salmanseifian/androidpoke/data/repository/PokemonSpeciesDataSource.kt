@@ -4,7 +4,7 @@ import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.salmanseifian.androidpoke.data.model.PokemonSpecies
 import com.salmanseifian.androidpoke.data.remote.PokeService
-import com.salmanseifian.androidpoke.utils.Constants.STARTING_PAGE_INDEX
+import com.salmanseifian.androidpoke.utils.Constants.STARTING_OFFSET_INDEX
 import retrofit2.HttpException
 import java.io.IOException
 import javax.inject.Inject
@@ -16,15 +16,16 @@ class PokemonSpeciesDataSource @Inject constructor(private val pokeService: Poke
         state.anchorPosition
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, PokemonSpecies> {
-        val page = params.key ?: STARTING_PAGE_INDEX
+        val offset = params.key ?: STARTING_OFFSET_INDEX
+        val loadSize = params.loadSize
         return try {
             val response =
-                pokeService.getPokemonSpecies(offset(page, params.loadSize), params.loadSize)
+                pokeService.getPokemonSpecies(offset, params.loadSize)
             val allSpecies = response.pokemonSpecies
             LoadResult.Page(
                 data = allSpecies,
-                prevKey = if (page == STARTING_PAGE_INDEX) null else page - 1,
-                nextKey = if (response.next == null) null else page + 1
+                prevKey = if (offset == STARTING_OFFSET_INDEX) null else offset - loadSize,
+                nextKey = if (response.next == null) null else offset + loadSize
             )
 
         } catch (exception: IOException) {
@@ -34,7 +35,4 @@ class PokemonSpeciesDataSource @Inject constructor(private val pokeService: Poke
             LoadResult.Error(exception)
         }
     }
-
-
-    private fun offset(page: Int, itemsPerPage: Int) = (page - 1) * itemsPerPage
 }
