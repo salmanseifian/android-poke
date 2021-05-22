@@ -19,7 +19,7 @@ class PokemonSpeciesDataSource @Inject constructor(private val pokeService: Poke
         val page = params.key ?: STARTING_PAGE_INDEX
         return try {
             val response =
-                pokeService.getPokemonSpecies(params.loadSize, offset(page, params.loadSize))
+                pokeService.getPokemonSpecies(offset(page, params.loadSize), params.loadSize)
             val allSpecies = response.pokemonSpecies
             LoadResult.Page(
                 data = allSpecies,
