@@ -15,5 +15,5 @@ abstract class RepositoryModule {
 
     @ActivityRetainedScoped
     @Binds
-    abstract fun bingRepository(repository: PokeRepository): RemotePokeRepository
+    abstract fun bingRepository(repository: RemotePokeRepository): PokeRepository
 }
