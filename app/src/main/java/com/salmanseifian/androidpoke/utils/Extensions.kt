@@ -13,7 +13,8 @@ fun Context.toast(@StringRes resId: Int) {
 fun String.extractSpeciesId(): String {
     val uri = URI(this)
     val path: String = uri.path
-    return path.substring(path.lastIndexOf('/') - 1, path.lastIndex)
+    val segments = path.split("/")
+    return segments[segments.size - 2]
 }
 
 fun String.createImageUrl() = IMAGE_BASE_URL + this.extractSpeciesId() + ".png"

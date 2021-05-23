@@ -11,6 +11,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.salmanseifian.androidpoke.R
 import com.salmanseifian.androidpoke.databinding.FragmentPokemonSpeciesBinding
 import com.salmanseifian.androidpoke.ui.pokemondetails.PokemonDetailsFragment
 import dagger.hilt.android.AndroidEntryPoint
@@ -19,35 +20,20 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class PokemonSpeciesFragment : Fragment() {
+class PokemonSpeciesFragment : Fragment(R.layout.fragment_pokemon_species) {
 
     private val viewModel: PokemonSpeciesViewModel by viewModels()
     private val adapter = PokemonSpeciesAdapter { url: String? -> onItemClicked(url) }
     private var searchJob: Job? = null
     private lateinit var binding: FragmentPokemonSpeciesBinding
 
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        binding = FragmentPokemonSpeciesBinding.inflate(inflater, container, false)
-        return binding.root
-    }
-
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        setUpAdapter()
+        binding = FragmentPokemonSpeciesBinding.bind(view)
 
-        searchJob?.cancel()
-        searchJob = lifecycleScope.launch {
-            viewModel.searchSpecies().collectLatest {
-                adapter.submitData(it)
-            }
-        }
+        setUpAdapter()
+        fetchPokemonSpecies()
 
         binding.swipeRefreshLayout.setOnRefreshListener {
             adapter.refresh()
@@ -94,6 +80,15 @@ class PokemonSpeciesFragment : Fragment() {
             }
         }
 
+    }
+
+    private fun fetchPokemonSpecies(){
+        searchJob?.cancel()
+        searchJob = lifecycleScope.launch {
+            viewModel.searchSpecies().collectLatest {
+                adapter.submitData(it)
+            }
+        }
     }
 
 
