@@ -3,9 +3,25 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/nav_graph"
     app:startDestination="@id/pokemonSpeciesFragment">
-    
+
     <fragment
         android:id="@+id/pokemonSpeciesFragment"
-        android:name="com.salmanseifian.androidpoke.ui.pokemonlist.PokemonSpeciesFragment" />
+        android:name="com.salmanseifian.androidpoke.ui.pokemonlist.PokemonSpeciesFragment">
 
+        <action
+            android:id="@+id/to_pokemonDetailsFFragment"
+            app:destination="@id/pokemonDetailsFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/pokemonDetailsFragment"
+        android:name="com.salmanseifian.androidpoke.ui.pokemondetails.PokemonDetailsFragment">
+        <argument
+            android:name="url"
+            app:argType="string" />
+    </fragment>
 </navigation>
