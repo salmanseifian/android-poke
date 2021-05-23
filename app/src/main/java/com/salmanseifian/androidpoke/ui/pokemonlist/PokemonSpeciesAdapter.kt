@@ -9,6 +9,7 @@ import com.bumptech.glide.Glide
 import com.salmanseifian.androidpoke.data.model.PokemonSpecies
 import com.salmanseifian.androidpoke.databinding.ItemPokemonSpeciesBinding
 import com.salmanseifian.androidpoke.utils.createImageUrl
+import com.salmanseifian.androidpoke.utils.loadUrl
 
 
 class PokemonSpeciesAdapter(private val clicked: (String?) -> Unit) :
@@ -40,7 +41,7 @@ class PokemonSpeciesAdapter(private val clicked: (String?) -> Unit) :
                     clicked.invoke(data?.url)
                 }
                 it.txtName.text = data?.name
-                Glide.with(it.root.context).load(data?.url?.createImageUrl()).into(it.img)
+                it.img.loadUrl(data?.url?.createImageUrl())
             }
 
         }

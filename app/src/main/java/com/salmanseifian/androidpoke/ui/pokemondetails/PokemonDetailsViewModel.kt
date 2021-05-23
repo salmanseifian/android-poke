@@ -19,5 +19,11 @@ class PokemonDetailsViewModel @Inject constructor(private val repository: Remote
         emit(repository.getPokemonDetails(id.toInt()))
     }
 
+    suspend fun getEvolutionChain(chainUrl: String) = flow {
+        val chainId = chainUrl.extractSpeciesId()
+        emit(Resource.Loading)
+        emit(repository.getEvolutionChain(chainId.toInt()))
+    }
+
 
 }

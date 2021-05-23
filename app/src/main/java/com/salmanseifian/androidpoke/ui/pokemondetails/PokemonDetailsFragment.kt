@@ -9,6 +9,8 @@ import androidx.lifecycle.lifecycleScope
 import com.salmanseifian.androidpoke.R
 import com.salmanseifian.androidpoke.data.Resource
 import com.salmanseifian.androidpoke.databinding.FragmentPokemonDetailsBinding
+import com.salmanseifian.androidpoke.utils.createImageUrl
+import com.salmanseifian.androidpoke.utils.loadUrl
 import com.salmanseifian.androidpoke.utils.toast
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
@@ -45,8 +47,35 @@ class PokemonDetailsFragment : Fragment(R.layout.fragment_pokemon_details) {
                                 it.language?.name.equals("en")
                             }?.flavorText
                         }
+
+                        it.value.evolutionChain?.url?.let {
+                            loadEvolutionChain(it)
+                        }
+                    }
+                    is Resource.Failure -> {
+                        binding.progressCircular.isVisible = false
+                        requireContext().toast(R.string.err_loading_pokemon_details)
                     }
 
+                    is Resource.Loading -> {
+                        binding.progressCircular.isVisible = true
+                    }
+                }
+            }
+        }
+    }
+
+    private fun loadEvolutionChain(url: String) {
+        lifecycleScope.launch(Dispatchers.Main){
+            viewModel.getEvolutionChain(url).collect {
+                when (it) {
+                    is Resource.Success -> {
+                        binding.progressCircular.isVisible = false
+                        val species = it.value.chain?.evolvesTo?.first()?.species
+                        species?.let {
+                            binding.img.loadUrl(it.url?.createImageUrl())
+                        }
+                    }
                     is Resource.Failure -> {
                         binding.progressCircular.isVisible = false
                         requireContext().toast(R.string.err_loading_pokemon_details)

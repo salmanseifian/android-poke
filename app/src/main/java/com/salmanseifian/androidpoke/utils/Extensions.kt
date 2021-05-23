@@ -1,8 +1,10 @@
 package com.salmanseifian.androidpoke.utils
 
 import android.content.Context
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.annotation.StringRes
+import com.bumptech.glide.Glide
 import java.net.URI
 
 
@@ -18,3 +20,7 @@ fun String.extractSpeciesId(): String {
 }
 
 fun String.createImageUrl() = IMAGE_BASE_URL + this.extractSpeciesId() + ".png"
+
+fun ImageView.loadUrl(url: String?){
+    Glide.with(context).load(url).into(this)
+}
