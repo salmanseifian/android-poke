@@ -1,6 +1,5 @@
 package com.salmanseifian.androidpoke.ui.pokemondetails
 
-import android.os.Bundle
 import androidx.lifecycle.ViewModel
 import com.salmanseifian.androidpoke.data.Resource
 import com.salmanseifian.androidpoke.data.repository.RemotePokeRepository

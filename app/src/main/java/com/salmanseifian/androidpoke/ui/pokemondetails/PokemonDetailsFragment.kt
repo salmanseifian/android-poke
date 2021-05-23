@@ -42,7 +42,7 @@ class PokemonDetailsFragment : Fragment(R.layout.fragment_pokemon_details) {
                         binding.apply {
                             txtName.text = it.value.name
                             txtDesc.text = it.value.flavorTextEntries?.first {
-                                it.language?.equals("en") ?: false
+                                it.language?.name.equals("en")
                             }?.flavorText
                         }
                     }
