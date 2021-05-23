@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">AndroidPoke</string>
     <string name="retry">Retry</string>
+    <string name="err_loading_pokemon_details">There was an error loading the pokemon</string>
 </resources>
