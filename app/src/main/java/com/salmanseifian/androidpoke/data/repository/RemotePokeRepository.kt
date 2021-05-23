@@ -4,6 +4,7 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.salmanseifian.androidpoke.data.Resource
+import com.salmanseifian.androidpoke.data.model.EvolutionChainResponse
 import com.salmanseifian.androidpoke.data.model.PokemonDetailsResponse
 import com.salmanseifian.androidpoke.data.model.PokemonSpecies
 import com.salmanseifian.androidpoke.data.remote.PokeService
@@ -34,6 +35,27 @@ class RemotePokeRepository @Inject constructor(private val pokeService: PokeServ
         return withContext(Dispatchers.IO) {
             try {
                 Resource.Success(pokeService.getPokemonDetails(id))
+            } catch (throwable: Throwable) {
+                when (throwable) {
+                    is HttpException -> {
+                        Resource.Failure(
+                            false,
+                            throwable.code(),
+                            throwable.response()?.errorBody()
+                        )
+                    }
+                    else -> {
+                        Resource.Failure(true, null, null)
+                    }
+                }
+            }
+        }
+    }
+
+    override suspend fun getEvolutionChain(chainId: Int): Resource<EvolutionChainResponse> {
+        return withContext(Dispatchers.IO) {
+            try {
+                Resource.Success(pokeService.getEvolutionChain(chainId))
             } catch (throwable: Throwable) {
                 when (throwable) {
                     is HttpException -> {
