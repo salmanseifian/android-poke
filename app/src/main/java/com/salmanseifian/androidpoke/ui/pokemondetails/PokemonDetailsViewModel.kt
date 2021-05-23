@@ -1,5 +1,6 @@
 package com.salmanseifian.androidpoke.ui.pokemondetails
 
+import android.os.Bundle
 import androidx.lifecycle.ViewModel
 import com.salmanseifian.androidpoke.data.Resource
 import com.salmanseifian.androidpoke.data.repository.RemotePokeRepository
@@ -12,11 +13,12 @@ import javax.inject.Inject
 class PokemonDetailsViewModel @Inject constructor(private val repository: RemotePokeRepository) :
     ViewModel() {
 
-        suspend fun getPokemonDetails(url: String) = flow{
-            val id = url.extractSpeciesId()
-            emit(Resource.Loading)
-            emit(repository.getPokemonDetails(id.toInt()))
-        }
+
+    suspend fun getPokemonDetails(url: String) = flow {
+        val id = url.extractSpeciesId()
+        emit(Resource.Loading)
+        emit(repository.getPokemonDetails(id.toInt()))
+    }
 
 
 }

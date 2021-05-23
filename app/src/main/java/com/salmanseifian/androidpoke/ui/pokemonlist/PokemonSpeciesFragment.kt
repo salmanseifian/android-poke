@@ -8,9 +8,11 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.salmanseifian.androidpoke.databinding.FragmentPokemonSpeciesBinding
+import com.salmanseifian.androidpoke.ui.pokemondetails.PokemonDetailsFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
@@ -96,7 +98,9 @@ class PokemonSpeciesFragment : Fragment() {
 
 
     private fun onItemClicked(url: String?) {
-
+        url?.let{
+            findNavController().navigate(PokemonSpeciesFragmentDirections.toPokemonDetailsFFragment(url))
+        }
     }
 
 }

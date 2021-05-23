@@ -27,13 +27,15 @@ class PokemonDetailsFragment : Fragment(R.layout.fragment_pokemon_details) {
 
         binding = FragmentPokemonDetailsBinding.bind(view)
 
-        loadPokemonDetails()
+        val args = PokemonDetailsFragmentArgs.fromBundle(requireArguments())
+        val url = args.url
 
+        loadPokemonDetails(url)
     }
 
-    private fun loadPokemonDetails() {
+    private fun loadPokemonDetails(url: String) {
         lifecycleScope.launch(Dispatchers.Main) {
-            viewModel.getPokemonDetails("").collect {
+            viewModel.getPokemonDetails(url).collect {
                 when (it) {
                     is Resource.Success -> {
                         binding.progressCircular.isVisible = false
