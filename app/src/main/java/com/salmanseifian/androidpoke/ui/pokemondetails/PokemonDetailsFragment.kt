@@ -7,7 +7,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.salmanseifian.androidpoke.R
-import com.salmanseifian.androidpoke.data.Resource
+import com.salmanseifian.androidpoke.data.repository.Resource
 import com.salmanseifian.androidpoke.databinding.FragmentPokemonDetailsBinding
 import com.salmanseifian.androidpoke.utils.createImageUrl
 import com.salmanseifian.androidpoke.utils.loadUrl

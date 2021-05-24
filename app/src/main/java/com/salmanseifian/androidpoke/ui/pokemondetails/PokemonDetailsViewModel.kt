@@ -1,7 +1,7 @@
 package com.salmanseifian.androidpoke.ui.pokemondetails
 
 import androidx.lifecycle.ViewModel
-import com.salmanseifian.androidpoke.data.Resource
+import com.salmanseifian.androidpoke.data.repository.Resource
 import com.salmanseifian.androidpoke.data.repository.RemotePokeRepository
 import com.salmanseifian.androidpoke.utils.extractSpeciesId
 import dagger.hilt.android.lifecycle.HiltViewModel

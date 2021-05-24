@@ -3,7 +3,6 @@ package com.salmanseifian.androidpoke.data.repository
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import com.salmanseifian.androidpoke.data.Resource
 import com.salmanseifian.androidpoke.data.model.EvolutionChainResponse
 import com.salmanseifian.androidpoke.data.model.PokemonDetailsResponse
 import com.salmanseifian.androidpoke.data.model.PokemonSpecies
