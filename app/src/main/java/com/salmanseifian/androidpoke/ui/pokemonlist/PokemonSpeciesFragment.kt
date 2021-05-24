@@ -41,12 +41,12 @@ class PokemonSpeciesFragment : Fragment(R.layout.fragment_pokemon_species) {
     }
 
     private fun setUpAdapter() {
-        binding.allProductRecyclerView.apply {
+        binding.rvPokemonSpecies.apply {
             layoutManager = LinearLayoutManager(context)
             setHasFixedSize(true)
         }
 
-        binding.allProductRecyclerView.adapter = adapter.withLoadStateFooter(
+        binding.rvPokemonSpecies.adapter = adapter.withLoadStateFooter(
             footer = LoadingStateAdapter { adapter.retry() }
         )
 
@@ -56,7 +56,7 @@ class PokemonSpeciesFragment : Fragment(R.layout.fragment_pokemon_species) {
                 if (adapter.snapshot().isEmpty()) {
                     binding.progress.isVisible = true
                 }
-                binding.errorTxt.isVisible = false
+                binding.txtErr.isVisible = false
 
             } else {
                 binding.progress.isVisible = false
@@ -71,8 +71,8 @@ class PokemonSpeciesFragment : Fragment(R.layout.fragment_pokemon_species) {
                 }
                 error?.let {
                     if (adapter.snapshot().isEmpty()) {
-                        binding.errorTxt.isVisible = true
-                        binding.errorTxt.text = it.error.localizedMessage
+                        binding.txtErr.isVisible = true
+                        binding.txtErr.text = it.error.localizedMessage
                     }
 
                 }
