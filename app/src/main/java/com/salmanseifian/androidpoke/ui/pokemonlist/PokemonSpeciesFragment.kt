@@ -1,5 +1,6 @@
 package com.salmanseifian.androidpoke.ui.pokemonlist
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -27,13 +28,17 @@ class PokemonSpeciesFragment : Fragment(R.layout.fragment_pokemon_species) {
     private var searchJob: Job? = null
     private lateinit var binding: FragmentPokemonSpeciesBinding
 
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        fetchPokemonSpecies()
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         binding = FragmentPokemonSpeciesBinding.bind(view)
 
         setUpAdapter()
-        fetchPokemonSpecies()
 
         binding.swipeRefreshLayout.setOnRefreshListener {
             adapter.refresh()
@@ -84,7 +89,7 @@ class PokemonSpeciesFragment : Fragment(R.layout.fragment_pokemon_species) {
 
     private fun fetchPokemonSpecies(){
         searchJob?.cancel()
-        searchJob = lifecycleScope.launch {
+        searchJob = lifecycleScope.launchWhenResumed {
             viewModel.searchSpecies().collectLatest {
                 adapter.submitData(it)
             }
