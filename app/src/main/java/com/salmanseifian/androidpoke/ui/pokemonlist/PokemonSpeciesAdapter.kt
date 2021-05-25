@@ -35,11 +35,19 @@ class PokemonSpeciesAdapter(private val clicked: (String?) -> Unit) :
         private val binding: ItemPokemonSpeciesBinding
     ) : RecyclerView.ViewHolder(binding.root) {
 
+
+        init {
+            binding.root.setOnClickListener {
+                val position = bindingAdapterPosition
+                if (position != RecyclerView.NO_POSITION) {
+                    val pokemon = getItem(position)
+                   clicked.invoke(pokemon?.url)
+                }
+            }
+        }
+
         fun bind(data: PokemonSpecies?) {
             binding.let {
-                it.root.setOnClickListener {
-                    clicked.invoke(data?.url)
-                }
                 it.txtName.text = data?.name
                 it.img.loadUrl(data?.url?.createImageUrl())
             }
