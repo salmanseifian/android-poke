@@ -71,9 +71,10 @@ class PokemonDetailsFragment : Fragment(R.layout.fragment_pokemon_details) {
                 when (it) {
                     is Resource.Success -> {
                         binding.progressCircular.isVisible = false
-                        val species = it.value.chain?.evolvesTo?.first()?.species
-                        species?.let {
-                            binding.img.loadUrl(it.url?.createImageUrl())
+                        val firstSpecies = it.value.chain?.evolvesTo?.first()?.species
+                        firstSpecies?.let {species ->
+                            binding.img.loadUrl(species.url?.createImageUrl())
+                            binding.txtEvolvesToName.text = species.name
                         }
                     }
                     is Resource.Failure -> {
