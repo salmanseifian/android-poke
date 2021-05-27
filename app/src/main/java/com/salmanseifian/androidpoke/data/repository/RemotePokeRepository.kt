@@ -6,7 +6,7 @@ import androidx.paging.PagingData
 import com.salmanseifian.androidpoke.data.model.EvolutionChainResponse
 import com.salmanseifian.androidpoke.data.model.PokemonDetailsResponse
 import com.salmanseifian.androidpoke.data.model.PokemonSpecies
-import com.salmanseifian.androidpoke.data.remote.PokeService
+import com.salmanseifian.androidpoke.data_api.PokeService
 import com.salmanseifian.androidpoke.utils.NETWORK_PAGE_SIZE
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow

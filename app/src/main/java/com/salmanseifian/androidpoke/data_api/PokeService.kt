@@ -1,4 +1,4 @@
-package com.salmanseifian.androidpoke.data.remote
+package com.salmanseifian.androidpoke.data_api
 
 import com.salmanseifian.androidpoke.data.model.EvolutionChainResponse
 import com.salmanseifian.androidpoke.data.model.PokemonDetailsResponse
@@ -7,7 +7,7 @@ import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
 
-interface PokeService {
+interface c {
 
     @GET("v2/pokemon-species")
     suspend fun getPokemonSpecies(
