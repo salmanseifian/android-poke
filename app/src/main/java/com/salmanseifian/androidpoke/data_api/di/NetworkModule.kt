@@ -1,6 +1,8 @@
 package com.salmanseifian.androidpoke.data_api.di
 
 import com.salmanseifian.androidpoke.data_api.PokeService
+import com.salmanseifian.androidpoke.data_api.data.PokemonSpeciesDataSource
+import com.salmanseifian.androidpoke.data_api.mapper.PokemonSpeciesResponseToRepositoryModelMapper
 import com.salmanseifian.androidpoke.utils.POKE_API_URL
 import dagger.Module
 import dagger.Provides
@@ -14,7 +16,16 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object NetworkModule {
+class NetworkModule {
+    @Singleton
+    @Provides
+    fun providePokemonSpeciesDataSource(
+        pokeService: PokeService,
+        pokemonSpeciesResponseToRepositoryModelMapper: PokemonSpeciesResponseToRepositoryModelMapper,
+    ): PokemonSpeciesDataSource =
+        PokemonSpeciesDataSource(pokeService, pokemonSpeciesResponseToRepositoryModelMapper)
+
+
     private val loggingInterceptor =
         HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BASIC)
 
@@ -25,11 +36,15 @@ object NetworkModule {
 
     @Singleton
     @Provides
-    fun provideRetrofitService(): PokeService = Retrofit.Builder()
+    fun provideApiService(retrofit: Retrofit): PokeService =
+        retrofit.create(PokeService::class.java)
+
+    @Singleton
+    @Provides
+    fun provideRetrofit(): Retrofit = Retrofit.Builder()
         .baseUrl(POKE_API_URL)
         .client(okHttpClient)
         .addConverterFactory(GsonConverterFactory.create())
         .build()
-        .create(PokeService::class.java)
 
 }

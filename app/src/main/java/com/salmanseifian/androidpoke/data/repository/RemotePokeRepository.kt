@@ -5,6 +5,7 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.salmanseifian.androidpoke.data.model.EvolutionChainResponse
 import com.salmanseifian.androidpoke.data.model.PokemonDetailsResponse
+import com.salmanseifian.androidpoke.data.model.PokemonRepositoryModel
 import com.salmanseifian.androidpoke.data_api.model.PokemonSpecies
 import com.salmanseifian.androidpoke.data_api.PokeService
 import com.salmanseifian.androidpoke.data_api.data.PokemonSpeciesDataSource
@@ -15,10 +16,13 @@ import kotlinx.coroutines.withContext
 import retrofit2.HttpException
 import javax.inject.Inject
 
-class RemotePokeRepository @Inject constructor(private val pokeService: PokeService) :
+class RemotePokeRepository @Inject constructor(
+    private val pokeService: PokeService,
+    private val pokemonSpeciesDataSource: PokemonSpeciesDataSource
+) :
     PokeRepository {
 
-    override fun getAllPokemonSpecies(): Flow<PagingData<PokemonSpecies>> {
+    override fun getAllPokemonSpecies(): Flow<PagingData<PokemonRepositoryModel>> {
         return Pager(
             config = PagingConfig(
                 enablePlaceholders = false,
@@ -26,7 +30,7 @@ class RemotePokeRepository @Inject constructor(private val pokeService: PokeServ
                 initialLoadSize = NETWORK_PAGE_SIZE
             ),
             pagingSourceFactory = {
-                PokemonSpeciesDataSource(pokeService)
+                pokemonSpeciesDataSource
             }
         ).flow
     }
