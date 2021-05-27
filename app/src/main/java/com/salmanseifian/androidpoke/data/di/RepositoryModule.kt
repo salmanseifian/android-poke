@@ -1,4 +1,4 @@
-package com.salmanseifian.androidpoke.di
+package com.salmanseifian.androidpoke.data.di
 
 import com.salmanseifian.androidpoke.data.repository.PokeRepository
 import com.salmanseifian.androidpoke.data.repository.RemotePokeRepository
