@@ -5,8 +5,7 @@ import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import com.salmanseifian.androidpoke.data.model.PokemonSpecies
+import com.salmanseifian.androidpoke.data_api.model.PokemonSpecies
 import com.salmanseifian.androidpoke.databinding.ItemPokemonSpeciesBinding
 import com.salmanseifian.androidpoke.utils.createImageUrl
 import com.salmanseifian.androidpoke.utils.loadUrl

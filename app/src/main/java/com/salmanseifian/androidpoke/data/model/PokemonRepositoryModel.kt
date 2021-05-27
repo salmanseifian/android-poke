@@ -1,6 +1,8 @@
 package com.salmanseifian.androidpoke.data.model
 
-import com.google.gson.annotations.SerializedName
+data class PokemonSpeciesRepositoryModel(
+    val pokemons: List<PokemonRepositoryModel>
+)
 
 data class PokemonRepositoryModel(
     val name: String,

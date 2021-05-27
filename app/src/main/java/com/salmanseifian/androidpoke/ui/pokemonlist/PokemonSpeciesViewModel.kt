@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import com.salmanseifian.androidpoke.data.model.PokemonSpecies
+import com.salmanseifian.androidpoke.data_api.model.PokemonSpecies
 import com.salmanseifian.androidpoke.data.repository.RemotePokeRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
