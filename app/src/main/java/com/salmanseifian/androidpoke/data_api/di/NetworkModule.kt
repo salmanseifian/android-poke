@@ -1,4 +1,4 @@
-package com.salmanseifian.androidpoke.di
+package com.salmanseifian.androidpoke.data_api.di
 
 import com.salmanseifian.androidpoke.data.remote.PokeService
 import com.salmanseifian.androidpoke.utils.POKE_API_URL
