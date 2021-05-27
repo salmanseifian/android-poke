@@ -16,11 +16,10 @@ import kotlinx.coroutines.withContext
 import retrofit2.HttpException
 import javax.inject.Inject
 
-class RemotePokeRepository @Inject constructor(
+class PokeRepositoryImp @Inject constructor(
     private val pokeService: PokeService,
     private val pokemonSpeciesDataSource: PokemonSpeciesDataSource
-) :
-    PokeRepository {
+) : PokeRepository {
 
     override fun getAllPokemonSpecies(): Flow<PagingData<PokemonRepositoryModel>> {
         return Pager(

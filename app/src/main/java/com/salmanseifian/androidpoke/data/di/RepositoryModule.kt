@@ -1,7 +1,7 @@
 package com.salmanseifian.androidpoke.data.di
 
 import com.salmanseifian.androidpoke.data.repository.PokeRepository
-import com.salmanseifian.androidpoke.data.repository.RemotePokeRepository
+import com.salmanseifian.androidpoke.data.repository.PokeRepositoryImp
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -15,5 +15,5 @@ abstract class RepositoryModule {
 
     @ActivityRetainedScoped
     @Binds
-    abstract fun bingRepository(repository: RemotePokeRepository): PokeRepository
+    abstract fun bingRepository(repository: PokeRepositoryImp): PokeRepository
 }
