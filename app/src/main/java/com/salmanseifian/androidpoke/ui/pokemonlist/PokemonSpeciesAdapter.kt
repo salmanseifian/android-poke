@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.salmanseifian.androidpoke.data.model.PokemonRepositoryModel
 import com.salmanseifian.androidpoke.data_api.model.PokemonSpecies
 import com.salmanseifian.androidpoke.databinding.ItemPokemonSpeciesBinding
 import com.salmanseifian.androidpoke.utils.createImageUrl
@@ -12,7 +13,7 @@ import com.salmanseifian.androidpoke.utils.loadUrl
 
 
 class PokemonSpeciesAdapter(private val clicked: (String?) -> Unit) :
-    PagingDataAdapter<PokemonSpecies, PokemonSpeciesAdapter.PlayersViewHolder>(
+    PagingDataAdapter<PokemonRepositoryModel, PokemonSpeciesAdapter.PlayersViewHolder>(
         PokemonSpeciesDiffCallback()
     ) {
 
@@ -45,7 +46,7 @@ class PokemonSpeciesAdapter(private val clicked: (String?) -> Unit) :
             }
         }
 
-        fun bind(data: PokemonSpecies?) {
+        fun bind(data: PokemonRepositoryModel?) {
             binding.let {
                 it.txtName.text = data?.name
                 it.img.loadUrl(data?.url?.createImageUrl())
@@ -54,12 +55,12 @@ class PokemonSpeciesAdapter(private val clicked: (String?) -> Unit) :
         }
     }
 
-    private class PokemonSpeciesDiffCallback : DiffUtil.ItemCallback<PokemonSpecies>() {
-        override fun areItemsTheSame(oldItem: PokemonSpecies, newItem: PokemonSpecies): Boolean {
+    private class PokemonSpeciesDiffCallback : DiffUtil.ItemCallback<PokemonRepositoryModel>() {
+        override fun areItemsTheSame(oldItem: PokemonRepositoryModel, newItem: PokemonRepositoryModel): Boolean {
             return oldItem == newItem
         }
 
-        override fun areContentsTheSame(oldItem: PokemonSpecies, newItem: PokemonSpecies): Boolean {
+        override fun areContentsTheSame(oldItem: PokemonRepositoryModel, newItem: PokemonRepositoryModel): Boolean {
             return oldItem == newItem
         }
     }

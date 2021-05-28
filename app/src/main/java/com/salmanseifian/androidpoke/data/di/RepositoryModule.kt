@@ -2,8 +2,12 @@ package com.salmanseifian.androidpoke.data.di
 
 import com.salmanseifian.androidpoke.data.repository.PokeRepository
 import com.salmanseifian.androidpoke.data.repository.PokeRepositoryImp
+import com.salmanseifian.androidpoke.data_api.PokeService
+import com.salmanseifian.androidpoke.data_api.data.PokemonSpeciesDataSource
 import dagger.Binds
 import dagger.Module
+import dagger.Provides
+import dagger.Reusable
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ActivityRetainedComponent
 import dagger.hilt.android.scopes.ActivityRetainedScoped
@@ -11,9 +15,14 @@ import dagger.hilt.android.scopes.ActivityRetainedScoped
 
 @InstallIn(ActivityRetainedComponent::class)
 @Module
-abstract class RepositoryModule {
+class RepositoryModule {
 
-    @ActivityRetainedScoped
-    @Binds
-    abstract fun bingRepository(repository: PokeRepositoryImp): PokeRepository
+    @Provides
+    @Reusable
+    fun providePokeRepository(
+        pokeService: PokeService,
+        pokemonSpeciesDataSource: PokemonSpeciesDataSource
+    ): PokeRepository = PokeRepositoryImp(
+        pokeService, pokemonSpeciesDataSource
+    )
 }

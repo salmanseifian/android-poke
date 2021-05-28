@@ -3,9 +3,11 @@ package com.salmanseifian.androidpoke.data_api.di
 import com.salmanseifian.androidpoke.data_api.PokeService
 import com.salmanseifian.androidpoke.data_api.data.PokemonSpeciesDataSource
 import com.salmanseifian.androidpoke.data_api.mapper.PokemonSpeciesResponseToRepositoryModelMapper
+import com.salmanseifian.androidpoke.data_api.mapper.PokemonSpeciesResponseToRepositoryModelMapperImpl
 import com.salmanseifian.androidpoke.utils.POKE_API_URL
 import dagger.Module
 import dagger.Provides
+import dagger.Reusable
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
@@ -17,6 +19,8 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 class NetworkModule {
+
+
     @Singleton
     @Provides
     fun providePokemonSpeciesDataSource(
@@ -25,6 +29,11 @@ class NetworkModule {
     ): PokemonSpeciesDataSource =
         PokemonSpeciesDataSource(pokeService, pokemonSpeciesResponseToRepositoryModelMapper)
 
+
+    @Reusable
+    @Provides
+    fun providePokemonSpeciesResponseToRepositoryModelMapper(): PokemonSpeciesResponseToRepositoryModelMapper =
+        PokemonSpeciesResponseToRepositoryModelMapperImpl()
 
     private val loggingInterceptor =
         HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BASIC)
