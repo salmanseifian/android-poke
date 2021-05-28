@@ -1,7 +1,7 @@
 package com.salmanseifian.androidpoke.data_api
 
-import com.salmanseifian.androidpoke.data.model.EvolutionChainResponse
-import com.salmanseifian.androidpoke.data.model.PokemonDetailsResponse
+import com.salmanseifian.androidpoke.data_api.model.EvolutionChainResponse
+import com.salmanseifian.androidpoke.data_api.model.PokemonDetailsResponse
 import com.salmanseifian.androidpoke.data_api.model.PokemonSpeciesResponse
 import retrofit2.http.GET
 import retrofit2.http.Path

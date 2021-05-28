@@ -1,4 +1,4 @@
-package com.salmanseifian.androidpoke.data.model
+package com.salmanseifian.androidpoke.data_api.model
 
 
 import com.google.gson.annotations.SerializedName
