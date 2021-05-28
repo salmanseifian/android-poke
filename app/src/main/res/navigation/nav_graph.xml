@@ -6,7 +6,7 @@
 
     <fragment
         android:id="@+id/pokemonSpeciesFragment"
-        android:name="com.salmanseifian.androidpoke.ui.pokemonlist.PokemonSpeciesFragment">
+        android:name="com.salmanseifian.androidpoke.ui.PokemonSpeciesFragment">
 
         <action
             android:id="@+id/to_pokemonDetailsFFragment"
@@ -19,7 +19,7 @@
 
     <fragment
         android:id="@+id/pokemonDetailsFragment"
-        android:name="com.salmanseifian.androidpoke.ui.pokemondetails.PokemonDetailsFragment">
+        android:name="com.salmanseifian.androidpoke.ui.PokemonDetailsFragment">
         <argument
             android:name="url"
             app:argType="string" />

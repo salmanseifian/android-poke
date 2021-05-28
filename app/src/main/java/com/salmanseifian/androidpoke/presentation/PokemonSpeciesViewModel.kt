@@ -1,4 +1,4 @@
-package com.salmanseifian.androidpoke.ui.pokemonlist
+package com.salmanseifian.androidpoke.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

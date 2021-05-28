@@ -1,10 +1,8 @@
-package com.salmanseifian.androidpoke.ui.pokemonlist
+package com.salmanseifian.androidpoke.ui
 
 import android.content.Context
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -14,11 +12,12 @@ import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.salmanseifian.androidpoke.R
 import com.salmanseifian.androidpoke.databinding.FragmentPokemonSpeciesBinding
-import com.salmanseifian.androidpoke.ui.pokemondetails.PokemonDetailsFragment
+import com.salmanseifian.androidpoke.presentation.PokemonSpeciesViewModel
+import com.salmanseifian.androidpoke.ui.adapter.LoadingStateAdapter
+import com.salmanseifian.androidpoke.ui.adapter.PokemonSpeciesAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class PokemonSpeciesFragment : Fragment(R.layout.fragment_pokemon_species) {
@@ -87,7 +86,7 @@ class PokemonSpeciesFragment : Fragment(R.layout.fragment_pokemon_species) {
 
     }
 
-    private fun fetchPokemonSpecies(){
+    private fun fetchPokemonSpecies() {
         searchJob?.cancel()
         searchJob = lifecycleScope.launchWhenResumed {
             viewModel.searchSpecies().collectLatest {
@@ -98,8 +97,12 @@ class PokemonSpeciesFragment : Fragment(R.layout.fragment_pokemon_species) {
 
 
     private fun onItemClicked(url: String?) {
-        url?.let{
-            findNavController().navigate(PokemonSpeciesFragmentDirections.toPokemonDetailsFFragment(url))
+        url?.let {
+            findNavController().navigate(
+                PokemonSpeciesFragmentDirections.toPokemonDetailsFFragment(
+                    url
+                )
+            )
         }
     }
 

@@ -1,4 +1,4 @@
-package com.salmanseifian.androidpoke.ui.pokemondetails
+package com.salmanseifian.androidpoke.ui
 
 import android.os.Bundle
 import android.view.View
@@ -9,6 +9,7 @@ import androidx.lifecycle.lifecycleScope
 import com.salmanseifian.androidpoke.R
 import com.salmanseifian.androidpoke.data.repository.Resource
 import com.salmanseifian.androidpoke.databinding.FragmentPokemonDetailsBinding
+import com.salmanseifian.androidpoke.presentation.PokemonDetailsViewModel
 import com.salmanseifian.androidpoke.utils.createImageUrl
 import com.salmanseifian.androidpoke.utils.loadUrl
 import com.salmanseifian.androidpoke.utils.toast
@@ -66,13 +67,13 @@ class PokemonDetailsFragment : Fragment(R.layout.fragment_pokemon_details) {
     }
 
     private fun loadEvolutionChain(url: String) {
-        lifecycleScope.launch(Dispatchers.Main){
+        lifecycleScope.launch(Dispatchers.Main) {
             viewModel.getEvolutionChain(url).collect {
                 when (it) {
                     is Resource.Success -> {
                         binding.progressCircular.isVisible = false
                         val firstSpecies = it.value.chain?.evolvesTo?.first()?.species
-                        firstSpecies?.let {species ->
+                        firstSpecies?.let { species ->
                             binding.img.loadUrl(species.url?.createImageUrl())
                             binding.txtEvolvesToName.text = species.name
                         }

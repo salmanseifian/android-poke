@@ -1,4 +1,4 @@
-package com.salmanseifian.androidpoke.ui.pokemondetails
+package com.salmanseifian.androidpoke.presentation
 
 import androidx.lifecycle.ViewModel
 import com.salmanseifian.androidpoke.data.repository.PokeRepository
