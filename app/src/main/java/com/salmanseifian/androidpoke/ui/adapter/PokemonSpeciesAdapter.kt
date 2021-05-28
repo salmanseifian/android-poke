@@ -1,4 +1,4 @@
-package com.salmanseifian.androidpoke.ui.pokemonlist
+package com.salmanseifian.androidpoke.ui.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -6,7 +6,6 @@ import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.salmanseifian.androidpoke.data.model.PokemonRepositoryModel
-import com.salmanseifian.androidpoke.data_api.model.PokemonSpecies
 import com.salmanseifian.androidpoke.databinding.ItemPokemonSpeciesBinding
 import com.salmanseifian.androidpoke.utils.createImageUrl
 import com.salmanseifian.androidpoke.utils.loadUrl
