@@ -3,11 +3,11 @@ package com.salmanseifian.androidpoke.data_api.mapper
 import com.salmanseifian.androidpoke.data.model.PokemonDetailsRepositoryModel
 import com.salmanseifian.androidpoke.data_api.model.PokemonDetailsResponse
 
-interface PokemonDetailsResponseToRepositoryModel {
+interface PokemonDetailsResponseToRepositoryModelMapper {
     fun toRepositoryModel(pokemonDetailsResponse: PokemonDetailsResponse): PokemonDetailsRepositoryModel
 }
 
-class PokemonDetailsResponseToRepositoryModelImp() : PokemonDetailsResponseToRepositoryModel {
+class PokemonDetailsResponseToRepositoryModelMapperImp : PokemonDetailsResponseToRepositoryModelMapper {
 
     override fun toRepositoryModel(pokemonDetailsResponse: PokemonDetailsResponse): PokemonDetailsRepositoryModel {
         return PokemonDetailsRepositoryModel(

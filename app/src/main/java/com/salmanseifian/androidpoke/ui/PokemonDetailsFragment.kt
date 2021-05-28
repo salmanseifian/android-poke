@@ -44,12 +44,10 @@ class PokemonDetailsFragment : Fragment(R.layout.fragment_pokemon_details) {
                         binding.progressCircular.isVisible = false
                         binding.apply {
                             txtName.text = it.value.name
-                            txtDesc.text = it.value.flavorTextEntries?.first {
-                                it.language?.name.equals("en")
-                            }?.flavorText
+                            txtDesc.text = it.value.flavorTextEntries
                         }
 
-                        it.value.evolutionChain?.url?.let {
+                        it.value.evolutionChainUrl?.let {
                             loadEvolutionChain(it)
                         }
                     }

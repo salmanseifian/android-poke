@@ -2,10 +2,7 @@ package com.salmanseifian.androidpoke.data_api.di
 
 import com.salmanseifian.androidpoke.data_api.PokeService
 import com.salmanseifian.androidpoke.data_api.data.PokemonSpeciesDataSource
-import com.salmanseifian.androidpoke.data_api.mapper.EvolutionChainResponseToRepositoryModelMapper
-import com.salmanseifian.androidpoke.data_api.mapper.EvolutionChainResponseToRepositoryModelMapperImpl
-import com.salmanseifian.androidpoke.data_api.mapper.PokemonSpeciesResponseToRepositoryModelMapper
-import com.salmanseifian.androidpoke.data_api.mapper.PokemonSpeciesResponseToRepositoryModelMapperImpl
+import com.salmanseifian.androidpoke.data_api.mapper.*
 import com.salmanseifian.androidpoke.utils.POKE_API_URL
 import dagger.Module
 import dagger.Provides
@@ -41,6 +38,11 @@ class NetworkModule {
     @Provides
     fun provideEvolutionChainResponseToRepositoryModelMapper(): EvolutionChainResponseToRepositoryModelMapper =
         EvolutionChainResponseToRepositoryModelMapperImpl()
+
+    @Reusable
+    @Provides
+    fun providePokemonDetailsResponseToRepositoryModelMapper(): PokemonDetailsResponseToRepositoryModelMapper =
+        PokemonDetailsResponseToRepositoryModelMapperImp()
 
     private val loggingInterceptor =
         HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BASIC)
