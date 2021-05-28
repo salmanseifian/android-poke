@@ -3,11 +3,13 @@ package com.salmanseifian.androidpoke.data.repository
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
+import com.salmanseifian.androidpoke.data.model.EvolutionChainRepositoryModel
 import com.salmanseifian.androidpoke.data_api.model.EvolutionChainResponse
 import com.salmanseifian.androidpoke.data_api.model.PokemonDetailsResponse
 import com.salmanseifian.androidpoke.data.model.PokemonRepositoryModel
 import com.salmanseifian.androidpoke.data_api.PokeService
 import com.salmanseifian.androidpoke.data_api.data.PokemonSpeciesDataSource
+import com.salmanseifian.androidpoke.data_api.mapper.EvolutionChainResponseToRepositoryModelMapper
 import com.salmanseifian.androidpoke.utils.NETWORK_PAGE_SIZE
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -17,7 +19,8 @@ import javax.inject.Inject
 
 class PokeRepositoryImp @Inject constructor(
     private val pokeService: PokeService,
-    private val pokemonSpeciesDataSource: PokemonSpeciesDataSource
+    private val pokemonSpeciesDataSource: PokemonSpeciesDataSource,
+    private val evolutionChainResponseToRepositoryModelMapper: EvolutionChainResponseToRepositoryModelMapper
 ) : PokeRepository {
 
     override fun getAllPokemonSpecies(): Flow<PagingData<PokemonRepositoryModel>> {
@@ -54,10 +57,10 @@ class PokeRepositoryImp @Inject constructor(
         }
     }
 
-    override suspend fun getEvolutionChain(chainId: Int): Resource<EvolutionChainResponse> {
+    override suspend fun getEvolutionChain(chainId: Int): Resource<EvolutionChainRepositoryModel> {
         return withContext(Dispatchers.IO) {
             try {
-                Resource.Success(pokeService.getEvolutionChain(chainId))
+                Resource.Success(evolutionChainResponseToRepositoryModelMapper.toRepositoryModel(pokeService.getEvolutionChain(chainId)))
             } catch (throwable: Throwable) {
                 when (throwable) {
                     is HttpException -> {

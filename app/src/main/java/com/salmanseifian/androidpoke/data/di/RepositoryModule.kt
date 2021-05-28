@@ -4,6 +4,7 @@ import com.salmanseifian.androidpoke.data.repository.PokeRepository
 import com.salmanseifian.androidpoke.data.repository.PokeRepositoryImp
 import com.salmanseifian.androidpoke.data_api.PokeService
 import com.salmanseifian.androidpoke.data_api.data.PokemonSpeciesDataSource
+import com.salmanseifian.androidpoke.data_api.mapper.EvolutionChainResponseToRepositoryModelMapper
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -21,8 +22,10 @@ class RepositoryModule {
     @Reusable
     fun providePokeRepository(
         pokeService: PokeService,
-        pokemonSpeciesDataSource: PokemonSpeciesDataSource
+        pokemonSpeciesDataSource: PokemonSpeciesDataSource,
+        evolutionChainResponseToRepositoryModelMapper: EvolutionChainResponseToRepositoryModelMapper
     ): PokeRepository = PokeRepositoryImp(
-        pokeService, pokemonSpeciesDataSource
+        pokeService, pokemonSpeciesDataSource,
+        evolutionChainResponseToRepositoryModelMapper
     )
 }
