@@ -6,7 +6,7 @@ import androidx.paging.PagingData
 import androidx.paging.map
 import com.salmanseifian.androidpoke.data.model.EvolutionChainRepositoryModel
 import com.salmanseifian.androidpoke.data.model.PokemonDetailsRepositoryModel
-import com.salmanseifian.androidpoke.data.model.PokemonSpeciesRepositoryModel
+import com.salmanseifian.androidpoke.data.model.SpeciesRepositoryModel
 import com.salmanseifian.androidpoke.data_api.PokeService
 import com.salmanseifian.androidpoke.data_api.data.PokemonSpeciesDataSource
 import com.salmanseifian.androidpoke.data_api.mapper.EvolutionChainResponseToRepositoryModelMapper
@@ -27,7 +27,7 @@ class PokeRepositoryImp @Inject constructor(
     private val evolutionChainResponseToRepositoryModelMapper: EvolutionChainResponseToRepositoryModelMapper
 ) : PokeRepository {
 
-    override fun getAllPokemonSpecies(): Flow<PagingData<PokemonSpeciesRepositoryModel>> {
+    override fun getAllPokemonSpecies(): Flow<PagingData<SpeciesRepositoryModel>> {
         return Pager(
             config = PagingConfig(
                 enablePlaceholders = false,

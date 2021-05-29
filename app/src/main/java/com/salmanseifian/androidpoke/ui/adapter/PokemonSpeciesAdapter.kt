@@ -5,14 +5,14 @@ import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.salmanseifian.androidpoke.data.model.PokemonSpeciesRepositoryModel
+import com.salmanseifian.androidpoke.data.model.SpeciesRepositoryModel
 import com.salmanseifian.androidpoke.databinding.ItemPokemonSpeciesBinding
 import com.salmanseifian.androidpoke.utils.createImageUrl
 import com.salmanseifian.androidpoke.utils.loadUrl
 
 
 class PokemonSpeciesAdapter(private val clicked: (String?) -> Unit) :
-    PagingDataAdapter<PokemonSpeciesRepositoryModel, PokemonSpeciesAdapter.PlayersViewHolder>(
+    PagingDataAdapter<SpeciesRepositoryModel, PokemonSpeciesAdapter.PlayersViewHolder>(
         PokemonSpeciesDiffCallback()
     ) {
 
@@ -45,7 +45,7 @@ class PokemonSpeciesAdapter(private val clicked: (String?) -> Unit) :
             }
         }
 
-        fun bind(data: PokemonSpeciesRepositoryModel?) {
+        fun bind(data: SpeciesRepositoryModel?) {
             binding.let {
                 it.txtName.text = data?.name
                 it.img.loadUrl(data?.url?.createImageUrl())
@@ -55,17 +55,17 @@ class PokemonSpeciesAdapter(private val clicked: (String?) -> Unit) :
     }
 
     private class PokemonSpeciesDiffCallback :
-        DiffUtil.ItemCallback<PokemonSpeciesRepositoryModel>() {
+        DiffUtil.ItemCallback<SpeciesRepositoryModel>() {
         override fun areItemsTheSame(
-            oldItem: PokemonSpeciesRepositoryModel,
-            newItem: PokemonSpeciesRepositoryModel
+            oldItem: SpeciesRepositoryModel,
+            newItem: SpeciesRepositoryModel
         ): Boolean {
             return oldItem == newItem
         }
 
         override fun areContentsTheSame(
-            oldItem: PokemonSpeciesRepositoryModel,
-            newItem: PokemonSpeciesRepositoryModel
+            oldItem: SpeciesRepositoryModel,
+            newItem: SpeciesRepositoryModel
         ): Boolean {
             return oldItem == newItem
         }

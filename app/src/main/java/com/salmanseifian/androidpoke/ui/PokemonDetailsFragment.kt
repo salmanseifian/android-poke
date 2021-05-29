@@ -48,7 +48,7 @@ class PokemonDetailsFragment : Fragment(R.layout.fragment_pokemon_details) {
                         }
 
                         it.value.evolutionChainUrl?.let {
-                            loadEvolutionChain(it)
+                            loadEvolutionChain(url, it)
                         }
                     }
                     is Resource.Failure -> {
@@ -64,13 +64,20 @@ class PokemonDetailsFragment : Fragment(R.layout.fragment_pokemon_details) {
         }
     }
 
-    private fun loadEvolutionChain(url: String) {
+    private fun loadEvolutionChain(speciesUrl: String, evolutionChainUrl: String) {
         lifecycleScope.launch(Dispatchers.Main) {
-            viewModel.getEvolutionChain(url).collect {
+            viewModel.getEvolutionChain(evolutionChainUrl).collect {
                 when (it) {
                     is Resource.Success -> {
                         binding.progressCircular.isVisible = false
-                        it.value.evolvesTo.let { species ->
+
+                        val evolution =
+                            it.value.evolutions?.firstOrNull { it.first?.url == speciesUrl }?.second
+                        evolution?.let { species ->
+                            binding.img.visibility = View.VISIBLE
+                            binding.txtEvolvesTo.visibility = View.VISIBLE
+                            binding.txtEvolvesToName.visibility = View.VISIBLE
+
                             binding.img.loadUrl(species.url.createImageUrl())
                             binding.txtEvolvesToName.text = species.name
                         }

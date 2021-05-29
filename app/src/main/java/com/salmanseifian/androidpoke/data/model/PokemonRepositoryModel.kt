@@ -1,7 +1,7 @@
 package com.salmanseifian.androidpoke.data.model
 
 
-data class PokemonSpeciesRepositoryModel(
+data class SpeciesRepositoryModel(
     val name: String,
     val url: String
 )

@@ -56,6 +56,7 @@
                 android:paddingBottom="16dp"
                 android:text="@string/evolves_to"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+                android:visibility="gone"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/txt_desc"
                 tools:text="Desc" />
@@ -66,6 +67,7 @@
                 android:layout_height="96dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginLeft="16dp"
+                android:visibility="gone"
                 app:layout_constraintStart_toEndOf="@id/txt_evolves_to"
                 app:layout_constraintTop_toBottomOf="@id/txt_evolves_to" />
 
@@ -76,8 +78,9 @@
                 android:paddingTop="16dp"
                 android:paddingBottom="16dp"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
-                app:layout_constraintStart_toStartOf="@id/img"
+                android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="@id/img"
+                app:layout_constraintStart_toStartOf="@id/img"
                 app:layout_constraintTop_toBottomOf="@id/img"
                 tools:text="Desc" />
 
