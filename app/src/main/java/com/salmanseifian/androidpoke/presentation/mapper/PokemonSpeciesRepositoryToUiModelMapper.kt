@@ -5,14 +5,14 @@ import com.salmanseifian.androidpoke.presentation.model.SpeciesUiModel
 import javax.inject.Inject
 
 interface PokemonSpeciesRepositoryToUiModelMapper {
-    fun toRepositoryModel(speciesRepositoryModel: SpeciesRepositoryModel): SpeciesUiModel
+    fun toUiModel(speciesRepositoryModel: SpeciesRepositoryModel): SpeciesUiModel
 }
 
 
 class PokemonSpeciesRepositoryToUiModelMapperImp @Inject constructor() :
     PokemonSpeciesRepositoryToUiModelMapper {
 
-    override fun toRepositoryModel(speciesRepositoryModel: SpeciesRepositoryModel) =
+    override fun toUiModel(speciesRepositoryModel: SpeciesRepositoryModel) =
         SpeciesUiModel(speciesRepositoryModel.name, speciesRepositoryModel.url)
 
 }

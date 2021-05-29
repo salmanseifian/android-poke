@@ -1,6 +1,5 @@
 package com.salmanseifian.androidpoke.ui
 
-import android.content.Context
 import android.os.Bundle
 import android.view.View
 import androidx.core.view.isVisible
@@ -9,7 +8,6 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
-import androidx.paging.PagingData
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.salmanseifian.androidpoke.R
 import com.salmanseifian.androidpoke.databinding.FragmentPokemonSpeciesBinding
@@ -17,21 +15,14 @@ import com.salmanseifian.androidpoke.presentation.SpeciesViewModel
 import com.salmanseifian.androidpoke.ui.adapter.LoadingStateAdapter
 import com.salmanseifian.androidpoke.ui.adapter.SpeciesAdapter
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class SpeciesFragment : Fragment(R.layout.fragment_pokemon_species) {
 
     private val viewModel: SpeciesViewModel by viewModels()
     private val adapter = SpeciesAdapter { url: String? -> onItemClicked(url) }
-    private var searchJob: Job? = null
     private lateinit var binding: FragmentPokemonSpeciesBinding
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        fetchPokemonSpecies()
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -40,10 +31,14 @@ class SpeciesFragment : Fragment(R.layout.fragment_pokemon_species) {
 
         setUpAdapter()
 
+        viewModel.allSpecies.observe(viewLifecycleOwner, {
+            lifecycleScope.launch {
+                adapter.submitData(it)
+            }
+        })
+
         binding.swipeRefreshLayout.setOnRefreshListener {
             adapter.refresh()
-            adapter.submitData(lifecycle, PagingData.empty())
-            fetchPokemonSpecies()
         }
     }
 
@@ -88,16 +83,6 @@ class SpeciesFragment : Fragment(R.layout.fragment_pokemon_species) {
         }
 
     }
-
-    private fun fetchPokemonSpecies() {
-        searchJob?.cancel()
-        searchJob = lifecycleScope.launchWhenResumed {
-            viewModel.getAllPokemonSpecies().collectLatest {
-                adapter.submitData(it)
-            }
-        }
-    }
-
 
     private fun onItemClicked(url: String?) {
         url?.let {

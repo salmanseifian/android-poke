@@ -1,5 +1,7 @@
 package com.salmanseifian.androidpoke.presentation
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
@@ -9,8 +11,9 @@ import com.salmanseifian.androidpoke.data.repository.PokeRepository
 import com.salmanseifian.androidpoke.presentation.mapper.PokemonSpeciesRepositoryToUiModelMapper
 import com.salmanseifian.androidpoke.presentation.model.SpeciesUiModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -20,17 +23,26 @@ class SpeciesViewModel @Inject constructor(
 ) :
     ViewModel() {
 
-    private var currentResult: Flow<PagingData<SpeciesUiModel>>? = null
+    private val _allSpecies = MediatorLiveData<PagingData<SpeciesUiModel>>()
+    val allSpecies: LiveData<PagingData<SpeciesUiModel>>
+        get() = _allSpecies
 
-    fun getAllPokemonSpecies(): Flow<PagingData<SpeciesUiModel>> {
-        val newResult: Flow<PagingData<SpeciesUiModel>> =
-            pokeRepository.getAllPokemonSpecies().cachedIn(viewModelScope).map { pagingData ->
-                pagingData.map {
-                    pokemonSpeciesRepositoryToUiModelMapper.toRepositoryModel(it)
+    init {
+        getAllPokemonSpecies()
+    }
+
+    private fun getAllPokemonSpecies() {
+        viewModelScope.launch {
+            pokeRepository.getAllPokemonSpecies()
+                .cachedIn(viewModelScope)
+                .catch { }
+                .collect {
+                    val speciesUiModel = it.map {
+                        pokemonSpeciesRepositoryToUiModelMapper.toUiModel(it)
+                    }
+                    _allSpecies.postValue(speciesUiModel)
                 }
-            }
-        currentResult = newResult
-        return newResult
+        }
     }
 
 
