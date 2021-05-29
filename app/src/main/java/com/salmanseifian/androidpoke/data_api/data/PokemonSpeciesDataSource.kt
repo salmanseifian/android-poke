@@ -10,7 +10,7 @@ import retrofit2.HttpException
 import java.io.IOException
 import javax.inject.Inject
 
-class PokemonSpeciesDataSource @Inject constructor(
+class PokemonSpeciesDataSource constructor(
     private val pokeService: PokeService,
     private val pokemonSpeciesResponseToRepositoryModelMapper: PokemonSpeciesResponseToRepositoryModelMapper
 ) :

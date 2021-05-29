@@ -2,33 +2,17 @@ package com.salmanseifian.androidpoke.data.di
 
 import com.salmanseifian.androidpoke.data.repository.PokeRepository
 import com.salmanseifian.androidpoke.data.repository.PokeRepositoryImp
-import com.salmanseifian.androidpoke.data_api.PokeService
-import com.salmanseifian.androidpoke.data_api.data.PokemonSpeciesDataSource
-import com.salmanseifian.androidpoke.data_api.mapper.EvolutionChainResponseToRepositoryModelMapper
-import com.salmanseifian.androidpoke.data_api.mapper.PokemonDetailsResponseToRepositoryModelMapper
 import dagger.Binds
 import dagger.Module
-import dagger.Provides
-import dagger.Reusable
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ActivityRetainedComponent
-import dagger.hilt.android.scopes.ActivityRetainedScoped
+import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 
-
-@InstallIn(ActivityRetainedComponent::class)
+@InstallIn(SingletonComponent::class)
 @Module
-class RepositoryModule {
+abstract class RepositoryModule {
 
-    @Provides
-    @Reusable
-    fun providePokeRepository(
-        pokeService: PokeService,
-        pokemonSpeciesDataSource: PokemonSpeciesDataSource,
-        pokemonDetailsResponseToRepositoryModelMapper: PokemonDetailsResponseToRepositoryModelMapper,
-        evolutionChainResponseToRepositoryModelMapper: EvolutionChainResponseToRepositoryModelMapper
-    ): PokeRepository = PokeRepositoryImp(
-        pokeService, pokemonSpeciesDataSource,
-        pokemonDetailsResponseToRepositoryModelMapper,
-        evolutionChainResponseToRepositoryModelMapper
-    )
+    @Singleton
+    @Binds
+    abstract fun bindRepository(impl: PokeRepositoryImp): PokeRepository
 }

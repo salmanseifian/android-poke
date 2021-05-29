@@ -1,7 +1,6 @@
 package com.salmanseifian.androidpoke.data_api.di
 
 import com.salmanseifian.androidpoke.data_api.PokeService
-import com.salmanseifian.androidpoke.data_api.data.PokemonSpeciesDataSource
 import com.salmanseifian.androidpoke.data_api.mapper.*
 import com.salmanseifian.androidpoke.utils.POKE_API_URL
 import dagger.Module
@@ -15,19 +14,9 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
-@Module
 @InstallIn(SingletonComponent::class)
+@Module
 class NetworkModule {
-
-
-    @Singleton
-    @Provides
-    fun providePokemonSpeciesDataSource(
-        pokeService: PokeService,
-        pokemonSpeciesResponseToRepositoryModelMapper: PokemonSpeciesResponseToRepositoryModelMapper,
-    ): PokemonSpeciesDataSource =
-        PokemonSpeciesDataSource(pokeService, pokemonSpeciesResponseToRepositoryModelMapper)
-
 
     @Reusable
     @Provides
