@@ -1,6 +1,6 @@
 package com.salmanseifian.androidpoke.data.model
 
 data class EvolutionChainRepositoryModel(
-    val evolvesTo: PokemonRepositoryModel,
+    val evolvesTo: PokemonSpeciesRepositoryModel,
 )
 

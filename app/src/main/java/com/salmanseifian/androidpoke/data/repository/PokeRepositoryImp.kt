@@ -3,9 +3,10 @@ package com.salmanseifian.androidpoke.data.repository
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
+import androidx.paging.map
 import com.salmanseifian.androidpoke.data.model.EvolutionChainRepositoryModel
 import com.salmanseifian.androidpoke.data.model.PokemonDetailsRepositoryModel
-import com.salmanseifian.androidpoke.data.model.PokemonRepositoryModel
+import com.salmanseifian.androidpoke.data.model.PokemonSpeciesRepositoryModel
 import com.salmanseifian.androidpoke.data_api.PokeService
 import com.salmanseifian.androidpoke.data_api.data.PokemonSpeciesDataSource
 import com.salmanseifian.androidpoke.data_api.mapper.EvolutionChainResponseToRepositoryModelMapper
@@ -14,6 +15,7 @@ import com.salmanseifian.androidpoke.data_api.mapper.PokemonSpeciesResponseToRep
 import com.salmanseifian.androidpoke.utils.NETWORK_PAGE_SIZE
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import retrofit2.HttpException
 import javax.inject.Inject
@@ -25,7 +27,7 @@ class PokeRepositoryImp @Inject constructor(
     private val evolutionChainResponseToRepositoryModelMapper: EvolutionChainResponseToRepositoryModelMapper
 ) : PokeRepository {
 
-    override fun getAllPokemonSpecies(): Flow<PagingData<PokemonRepositoryModel>> {
+    override fun getAllPokemonSpecies(): Flow<PagingData<PokemonSpeciesRepositoryModel>> {
         return Pager(
             config = PagingConfig(
                 enablePlaceholders = false,
@@ -33,9 +35,13 @@ class PokeRepositoryImp @Inject constructor(
                 initialLoadSize = NETWORK_PAGE_SIZE
             ),
             pagingSourceFactory = {
-                PokemonSpeciesDataSource(pokeService, pokemonSpeciesResponseToRepositoryModelMapper)
+                PokemonSpeciesDataSource(pokeService)
             }
-        ).flow
+        ).flow.map { pagingData ->
+            pagingData.map {
+                pokemonSpeciesResponseToRepositoryModelMapper.toRepositoryModel(it)
+            }
+        }
     }
 
     override suspend fun getPokemonDetails(id: Int): Resource<PokemonDetailsRepositoryModel> {

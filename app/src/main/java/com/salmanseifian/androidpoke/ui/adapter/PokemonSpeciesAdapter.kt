@@ -5,14 +5,14 @@ import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.salmanseifian.androidpoke.data.model.PokemonRepositoryModel
+import com.salmanseifian.androidpoke.data.model.PokemonSpeciesRepositoryModel
 import com.salmanseifian.androidpoke.databinding.ItemPokemonSpeciesBinding
 import com.salmanseifian.androidpoke.utils.createImageUrl
 import com.salmanseifian.androidpoke.utils.loadUrl
 
 
 class PokemonSpeciesAdapter(private val clicked: (String?) -> Unit) :
-    PagingDataAdapter<PokemonRepositoryModel, PokemonSpeciesAdapter.PlayersViewHolder>(
+    PagingDataAdapter<PokemonSpeciesRepositoryModel, PokemonSpeciesAdapter.PlayersViewHolder>(
         PokemonSpeciesDiffCallback()
     ) {
 
@@ -40,12 +40,12 @@ class PokemonSpeciesAdapter(private val clicked: (String?) -> Unit) :
                 val position = bindingAdapterPosition
                 if (position != RecyclerView.NO_POSITION) {
                     val pokemon = getItem(position)
-                   clicked.invoke(pokemon?.url)
+                    clicked.invoke(pokemon?.url)
                 }
             }
         }
 
-        fun bind(data: PokemonRepositoryModel?) {
+        fun bind(data: PokemonSpeciesRepositoryModel?) {
             binding.let {
                 it.txtName.text = data?.name
                 it.img.loadUrl(data?.url?.createImageUrl())
@@ -54,12 +54,19 @@ class PokemonSpeciesAdapter(private val clicked: (String?) -> Unit) :
         }
     }
 
-    private class PokemonSpeciesDiffCallback : DiffUtil.ItemCallback<PokemonRepositoryModel>() {
-        override fun areItemsTheSame(oldItem: PokemonRepositoryModel, newItem: PokemonRepositoryModel): Boolean {
+    private class PokemonSpeciesDiffCallback :
+        DiffUtil.ItemCallback<PokemonSpeciesRepositoryModel>() {
+        override fun areItemsTheSame(
+            oldItem: PokemonSpeciesRepositoryModel,
+            newItem: PokemonSpeciesRepositoryModel
+        ): Boolean {
             return oldItem == newItem
         }
 
-        override fun areContentsTheSame(oldItem: PokemonRepositoryModel, newItem: PokemonRepositoryModel): Boolean {
+        override fun areContentsTheSame(
+            oldItem: PokemonSpeciesRepositoryModel,
+            newItem: PokemonSpeciesRepositoryModel
+        ): Boolean {
             return oldItem == newItem
         }
     }

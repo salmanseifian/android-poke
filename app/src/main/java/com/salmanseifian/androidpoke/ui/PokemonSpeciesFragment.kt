@@ -89,7 +89,7 @@ class PokemonSpeciesFragment : Fragment(R.layout.fragment_pokemon_species) {
     private fun fetchPokemonSpecies() {
         searchJob?.cancel()
         searchJob = lifecycleScope.launchWhenResumed {
-            viewModel.searchSpecies().collectLatest {
+            viewModel.getAllPokemonSpecies().collectLatest {
                 adapter.submitData(it)
             }
         }

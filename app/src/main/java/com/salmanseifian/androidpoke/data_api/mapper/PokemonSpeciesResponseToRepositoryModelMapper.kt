@@ -1,23 +1,18 @@
 package com.salmanseifian.androidpoke.data_api.mapper
 
-import com.salmanseifian.androidpoke.data.model.PokemonRepositoryModel
 import com.salmanseifian.androidpoke.data.model.PokemonSpeciesRepositoryModel
-import com.salmanseifian.androidpoke.data_api.model.PokemonSpeciesResponse
+import com.salmanseifian.androidpoke.data_api.model.PokemonSpecies
 import javax.inject.Inject
 
 interface PokemonSpeciesResponseToRepositoryModelMapper {
-    fun toRepositoryModel(pokemonSpeciesResponse: PokemonSpeciesResponse): PokemonSpeciesRepositoryModel
+    fun toRepositoryModel(pokemonSpecies: PokemonSpecies): PokemonSpeciesRepositoryModel
 }
 
 
 class PokemonSpeciesResponseToRepositoryModelMapperImpl @Inject constructor() :
     PokemonSpeciesResponseToRepositoryModelMapper {
 
-    override fun toRepositoryModel(pokemonSpeciesResponse: PokemonSpeciesResponse): PokemonSpeciesRepositoryModel {
-        return PokemonSpeciesRepositoryModel(pokemonSpeciesResponse.pokemonSpecies.map {
-            PokemonRepositoryModel(it.name, it.url)
-
-        })
-    }
+    override fun toRepositoryModel(pokemonSpecies: PokemonSpecies) =
+        PokemonSpeciesRepositoryModel(pokemonSpecies.name, pokemonSpecies.url)
 
 }
