@@ -5,15 +5,15 @@ import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.salmanseifian.androidpoke.data.model.SpeciesRepositoryModel
 import com.salmanseifian.androidpoke.databinding.ItemPokemonSpeciesBinding
+import com.salmanseifian.androidpoke.presentation.model.SpeciesUiModel
 import com.salmanseifian.androidpoke.utils.createImageUrl
 import com.salmanseifian.androidpoke.utils.loadUrl
 
 
-class PokemonSpeciesAdapter(private val clicked: (String?) -> Unit) :
-    PagingDataAdapter<SpeciesRepositoryModel, PokemonSpeciesAdapter.PlayersViewHolder>(
-        PokemonSpeciesDiffCallback()
+class SpeciesAdapter(private val clicked: (String?) -> Unit) :
+    PagingDataAdapter<SpeciesUiModel, SpeciesAdapter.PlayersViewHolder>(
+        SpeciesDiffCallback()
     ) {
 
     override fun onBindViewHolder(holder: PlayersViewHolder, position: Int) {
@@ -45,7 +45,7 @@ class PokemonSpeciesAdapter(private val clicked: (String?) -> Unit) :
             }
         }
 
-        fun bind(data: SpeciesRepositoryModel?) {
+        fun bind(data: SpeciesUiModel?) {
             binding.let {
                 it.txtName.text = data?.name
                 it.img.loadUrl(data?.url?.createImageUrl())
@@ -54,18 +54,18 @@ class PokemonSpeciesAdapter(private val clicked: (String?) -> Unit) :
         }
     }
 
-    private class PokemonSpeciesDiffCallback :
-        DiffUtil.ItemCallback<SpeciesRepositoryModel>() {
+    private class SpeciesDiffCallback :
+        DiffUtil.ItemCallback<SpeciesUiModel>() {
         override fun areItemsTheSame(
-            oldItem: SpeciesRepositoryModel,
-            newItem: SpeciesRepositoryModel
+            oldItem: SpeciesUiModel,
+            newItem: SpeciesUiModel
         ): Boolean {
             return oldItem == newItem
         }
 
         override fun areContentsTheSame(
-            oldItem: SpeciesRepositoryModel,
-            newItem: SpeciesRepositoryModel
+            oldItem: SpeciesUiModel,
+            newItem: SpeciesUiModel
         ): Boolean {
             return oldItem == newItem
         }

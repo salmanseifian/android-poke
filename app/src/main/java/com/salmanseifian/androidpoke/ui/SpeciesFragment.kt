@@ -13,18 +13,18 @@ import androidx.paging.PagingData
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.salmanseifian.androidpoke.R
 import com.salmanseifian.androidpoke.databinding.FragmentPokemonSpeciesBinding
-import com.salmanseifian.androidpoke.presentation.PokemonSpeciesViewModel
+import com.salmanseifian.androidpoke.presentation.SpeciesViewModel
 import com.salmanseifian.androidpoke.ui.adapter.LoadingStateAdapter
-import com.salmanseifian.androidpoke.ui.adapter.PokemonSpeciesAdapter
+import com.salmanseifian.androidpoke.ui.adapter.SpeciesAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
 
 @AndroidEntryPoint
-class PokemonSpeciesFragment : Fragment(R.layout.fragment_pokemon_species) {
+class SpeciesFragment : Fragment(R.layout.fragment_pokemon_species) {
 
-    private val viewModel: PokemonSpeciesViewModel by viewModels()
-    private val adapter = PokemonSpeciesAdapter { url: String? -> onItemClicked(url) }
+    private val viewModel: SpeciesViewModel by viewModels()
+    private val adapter = SpeciesAdapter { url: String? -> onItemClicked(url) }
     private var searchJob: Job? = null
     private lateinit var binding: FragmentPokemonSpeciesBinding
 
@@ -102,9 +102,7 @@ class PokemonSpeciesFragment : Fragment(R.layout.fragment_pokemon_species) {
     private fun onItemClicked(url: String?) {
         url?.let {
             findNavController().navigate(
-                PokemonSpeciesFragmentDirections.toPokemonDetailsFFragment(
-                    url
-                )
+                SpeciesFragmentDirections.toPokemonDetailsFFragment(url)
             )
         }
     }

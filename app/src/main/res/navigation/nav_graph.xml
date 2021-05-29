@@ -6,7 +6,7 @@
 
     <fragment
         android:id="@+id/pokemonSpeciesFragment"
-        android:name="com.salmanseifian.androidpoke.ui.PokemonSpeciesFragment">
+        android:name="com.salmanseifian.androidpoke.ui.SpeciesFragment">
 
         <action
             android:id="@+id/to_pokemonDetailsFFragment"
