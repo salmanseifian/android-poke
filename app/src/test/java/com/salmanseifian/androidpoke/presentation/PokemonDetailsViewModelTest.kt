@@ -4,9 +4,11 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.salmanseifian.androidpoke.TestCoroutineRule
 import com.salmanseifian.androidpoke.data.model.EvolutionChainRepositoryModel
 import com.salmanseifian.androidpoke.data.model.PokemonDetailsRepositoryModel
-import com.salmanseifian.androidpoke.data.model.PokemonRepositoryModel
+import com.salmanseifian.androidpoke.data.model.SpeciesRepositoryModel
 import com.salmanseifian.androidpoke.data.repository.PokeRepository
 import com.salmanseifian.androidpoke.data.repository.Resource
+import com.salmanseifian.androidpoke.presentation.model.EvolutionChainUiModel
+import com.salmanseifian.androidpoke.presentation.model.SpeciesUiModel
 import junit.framework.Assert.assertEquals
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.drop
@@ -41,12 +43,54 @@ class PokemonDetailsViewModelTest {
 
     private val coroutineDispatcher = TestCoroutineDispatcher()
 
-
     private val evolutionChainRepositoryModel = EvolutionChainRepositoryModel(
-        PokemonRepositoryModel(
-            "bulbasaur",
-            "https://pokeapi.co/api/v2/pokemon-species/1/"
+        listOf(
+            Pair(
+                SpeciesRepositoryModel(
+                    "bulbasaur",
+                    "https://pokeapi.co/api/v2/pokemon-species/1/"
+                ), SpeciesRepositoryModel(
+                    "ivysaur",
+                    "https://pokeapi.co/api/v2/pokemon-species/2/"
+                )
+            ),
+            Pair(
+                SpeciesRepositoryModel(
+                    "ivysaur",
+                    "https://pokeapi.co/api/v2/pokemon-species/2/"
+                ),
+                SpeciesRepositoryModel(
+                    "venusaur",
+                    "https://pokeapi.co/api/v2/pokemon-species/3/"
+                )
+            )
         )
+
+    )
+
+    private val evolutionChainUiModel = EvolutionChainUiModel(
+        listOf(
+            Pair(
+                SpeciesUiModel(
+                    "bulbasaur",
+                    "https://pokeapi.co/api/v2/pokemon-species/1/"
+                ), SpeciesUiModel(
+                    "ivysaur",
+                    "https://pokeapi.co/api/v2/pokemon-species/2/"
+                )
+            ),
+            Pair(
+                SpeciesUiModel(
+                    "ivysaur",
+                    "https://pokeapi.co/api/v2/pokemon-species/2/"
+                ),
+                SpeciesUiModel(
+                    "venusaur",
+                    "https://pokeapi.co/api/v2/pokemon-species/3/"
+                )
+            )
+        )
+
     )
 
 
