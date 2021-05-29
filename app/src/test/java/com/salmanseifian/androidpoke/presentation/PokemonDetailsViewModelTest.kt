@@ -3,6 +3,7 @@ package com.salmanseifian.androidpoke.presentation
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.salmanseifian.androidpoke.TestCoroutineRule
 import com.salmanseifian.androidpoke.data.model.EvolutionChainRepositoryModel
+import com.salmanseifian.androidpoke.data.model.PokemonDetailsRepositoryModel
 import com.salmanseifian.androidpoke.data.model.PokemonRepositoryModel
 import com.salmanseifian.androidpoke.data.repository.PokeRepository
 import com.salmanseifian.androidpoke.data.repository.Resource
@@ -102,6 +103,67 @@ class PokemonDetailsViewModelTest {
                     .first()
 
             assertEquals(secondItem, Resource.Failure(true, 400, null))
+
+        }
+    }
+
+    @Test
+    fun `When getPokemonDetails then getPokemonDetails invoked with success result`() {
+        coroutineDispatcher.runBlockingTest {
+
+            val expected = Resource.Success(
+                PokemonDetailsRepositoryModel(
+                    "https://pokeapi.co/api/v2/evolution-chain/1/",
+                    "A strange seed was\\nplanted on its\\nback at birth.\\fThe plant sprouts\\nand grows with\\nthis POKéMON.",
+                    1,
+                    "bulbasaur"
+                )
+            )
+
+            doReturn(
+                expected
+            )
+                .`when`(pokeRepository)
+                .getPokemonDetails(1)
+
+
+            val firstItem =
+                cut.getPokemonDetails("https://pokeapi.co/api/v2/pokemon-species/1/").first()
+
+            assertEquals(firstItem, Resource.Loading)
+
+            val secondItem =
+                cut.getPokemonDetails("https://pokeapi.co/api/v2/pokemon-species/1/").drop(1)
+                    .first()
+
+            assertEquals(secondItem, expected)
+
+        }
+    }
+
+    @Test
+    fun `When getPokemonDetails then getPokemonDetails invoked with failure result`() {
+        coroutineDispatcher.runBlockingTest {
+
+            val expected400Failure = Resource.Failure(true, 400, null)
+
+            doReturn(
+                expected400Failure
+            )
+                .`when`(pokeRepository)
+                .getPokemonDetails(1)
+
+
+            val firstItem =
+                cut.getPokemonDetails("https://pokeapi.co/api/v2/pokemon-species/1/").first()
+
+            assertEquals(firstItem, Resource.Loading)
+
+            val secondItem =
+                cut.getPokemonDetails("https://pokeapi.co/api/v2/pokemon-species/1/").drop(1)
+                    .first()
+
+            assertEquals(secondItem, expected400Failure)
 
         }
     }
