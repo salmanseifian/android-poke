@@ -9,6 +9,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
+import androidx.paging.PagingData
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.salmanseifian.androidpoke.R
 import com.salmanseifian.androidpoke.databinding.FragmentPokemonSpeciesBinding
@@ -41,6 +42,8 @@ class PokemonSpeciesFragment : Fragment(R.layout.fragment_pokemon_species) {
 
         binding.swipeRefreshLayout.setOnRefreshListener {
             adapter.refresh()
+            adapter.submitData(lifecycle, PagingData.empty())
+            fetchPokemonSpecies()
         }
     }
 
