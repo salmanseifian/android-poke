@@ -4,6 +4,7 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.map
+import com.salmanseifian.androidpoke.data.di.IoDispatcher
 import com.salmanseifian.androidpoke.data.model.EvolutionChainRepositoryModel
 import com.salmanseifian.androidpoke.data.model.PokemonDetailsRepositoryModel
 import com.salmanseifian.androidpoke.data.model.SpeciesRepositoryModel
@@ -13,7 +14,7 @@ import com.salmanseifian.androidpoke.data_api.mapper.EvolutionChainResponseToRep
 import com.salmanseifian.androidpoke.data_api.mapper.PokemonDetailsResponseToRepositoryModelMapper
 import com.salmanseifian.androidpoke.data_api.mapper.PokemonSpeciesResponseToRepositoryModelMapper
 import com.salmanseifian.androidpoke.utils.NETWORK_PAGE_SIZE
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
@@ -22,6 +23,7 @@ import javax.inject.Inject
 
 class PokeRepositoryImp @Inject constructor(
     private val pokeService: PokeService,
+    @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
     private val pokemonSpeciesResponseToRepositoryModelMapper: PokemonSpeciesResponseToRepositoryModelMapper,
     private val pokemonDetailsResponseToRepositoryModelMapperImp: PokemonDetailsResponseToRepositoryModelMapper,
     private val evolutionChainResponseToRepositoryModelMapper: EvolutionChainResponseToRepositoryModelMapper
@@ -45,7 +47,7 @@ class PokeRepositoryImp @Inject constructor(
     }
 
     override suspend fun getPokemonDetails(id: Int): Resource<PokemonDetailsRepositoryModel> {
-        return withContext(Dispatchers.IO) {
+        return withContext(ioDispatcher) {
             try {
                 Resource.Success(
                     pokemonDetailsResponseToRepositoryModelMapperImp.toRepositoryModel(
@@ -70,7 +72,7 @@ class PokeRepositoryImp @Inject constructor(
     }
 
     override suspend fun getEvolutionChain(chainId: Int): Resource<EvolutionChainRepositoryModel> {
-        return withContext(Dispatchers.IO) {
+        return withContext(ioDispatcher) {
             try {
                 Resource.Success(
                     evolutionChainResponseToRepositoryModelMapper.toRepositoryModel(
