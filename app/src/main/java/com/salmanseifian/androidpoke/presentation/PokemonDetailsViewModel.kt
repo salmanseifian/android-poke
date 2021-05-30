@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.salmanseifian.androidpoke.data.repository.PokeRepository
-import com.salmanseifian.androidpoke.data.repository.Resource
 import com.salmanseifian.androidpoke.presentation.mapper.EvolutionChainRepositoryToUiModelMapper
 import com.salmanseifian.androidpoke.presentation.mapper.PokemonDetailsRepositoryToUiModelMapper
 import com.salmanseifian.androidpoke.presentation.model.PokemonDetailsUiModel
@@ -33,37 +32,40 @@ class PokemonDetailsViewModel @Inject constructor(
 
     suspend fun getPokemonDetails(url: String) {
         val id = url.extractSpeciesId()
-        pokeRepository.getPokemonDetails(id.toInt()).collect {
-            when (it) {
-                is Resource.Success -> {
-                    _isLoading.value = false
-                    _pokemonDetails.value =
-                        pokemonDetailsRepositoryToUiModelMapper.toUiModel(it.value)
-                    it.value.evolutionChainUrl?.let {
-                        getEvolutionChain(url, it)
+
+        pokeRepository.getPokemonDetails(id.toInt())
+            .collect { result ->
+                when {
+                    result.isSuccess -> {
+                        _isLoading.value = false
+                        _pokemonDetails.value =
+                            pokemonDetailsRepositoryToUiModelMapper.toUiModel(result.getOrThrow())
+                        result.getOrNull()?.evolutionChainUrl?.let {
+                            getEvolutionChain(url, it)
+                        }
+                    }
+
+                    result.isFailure -> {
+                        _isLoading.value = false
                     }
                 }
-
-                is Resource.Failure -> {
-                    _isLoading.value = false
-                }
             }
-        }
     }
 
     suspend fun getEvolutionChain(url: String, chainUrl: String) {
         val chainId = chainUrl.extractSpeciesId()
-        pokeRepository.getEvolutionChain(chainId.toInt()).collect {
-            when (it) {
-                is Resource.Success -> {
+        pokeRepository.getEvolutionChain(chainId.toInt()).collect { result ->
+            when {
+                result.isSuccess -> {
                     _isLoading.value = false
-                    val uiModel = evolutionChainRepositoryToUiModelMapper.toUiModel(it.value)
+                    val uiModel =
+                        evolutionChainRepositoryToUiModelMapper.toUiModel(result.getOrThrow())
                     uiModel.evolutions?.firstOrNull { it.first?.url == url }?.second?.let {
                         _evolution.value = it
                     }
                 }
 
-                is Resource.Failure -> {
+                result.isFailure -> {
                     _isLoading.value = false
                 }
             }

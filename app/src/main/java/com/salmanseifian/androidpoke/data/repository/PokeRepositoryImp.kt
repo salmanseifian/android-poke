@@ -16,7 +16,6 @@ import com.salmanseifian.androidpoke.data_api.mapper.PokemonSpeciesResponseToRep
 import com.salmanseifian.androidpoke.utils.NETWORK_PAGE_SIZE
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.*
-import retrofit2.HttpException
 import javax.inject.Inject
 
 class PokeRepositoryImp @Inject constructor(
@@ -44,57 +43,31 @@ class PokeRepositoryImp @Inject constructor(
         }
     }
 
-    override fun getPokemonDetails(id: Int): Flow<Resource<PokemonDetailsRepositoryModel>> {
+    override fun getPokemonDetails(id: Int): Flow<Result<PokemonDetailsRepositoryModel>> {
         return flow {
             emit(
-                Resource.Success(
+                Result.success(
                     pokemonDetailsResponseToRepositoryModelMapperImp.toRepositoryModel(
                         pokeService.getPokemonDetails(id)
                     )
                 )
             )
         }
-            .catch {
-                when (it) {
-                    is HttpException -> {
-                        Resource.Failure(
-                            false,
-                            it.code(),
-                            it.response()?.errorBody()
-                        )
-                    }
-                    else -> {
-                        Resource.Failure(true, null, null)
-                    }
-                }
-            }
+            .catch { emit(Result.failure(it)) }
             .flowOn(ioDispatcher)
     }
 
-    override fun getEvolutionChain(chainId: Int): Flow<Resource<EvolutionChainRepositoryModel>> {
+    override fun getEvolutionChain(chainId: Int): Flow<Result<EvolutionChainRepositoryModel>> {
         return flow {
             emit(
-                Resource.Success(
+                Result.success(
                     evolutionChainResponseToRepositoryModelMapper.toRepositoryModel(
                         pokeService.getEvolutionChain(chainId)
                     )
                 )
             )
         }
-            .catch {
-                when (it) {
-                    is HttpException -> {
-                        Resource.Failure(
-                            false,
-                            it.code(),
-                            it.response()?.errorBody()
-                        )
-                    }
-                    else -> {
-                        Resource.Failure(true, null, null)
-                    }
-                }
-            }
+            .catch { emit(Result.failure(it)) }
             .flowOn(ioDispatcher)
 
     }

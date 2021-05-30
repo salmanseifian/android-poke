@@ -7,10 +7,8 @@ import com.salmanseifian.androidpoke.data.model.EvolutionChainRepositoryModel
 import com.salmanseifian.androidpoke.data.model.PokemonDetailsRepositoryModel
 import com.salmanseifian.androidpoke.data.model.SpeciesRepositoryModel
 import com.salmanseifian.androidpoke.data.repository.PokeRepository
-import com.salmanseifian.androidpoke.data.repository.Resource
 import com.salmanseifian.androidpoke.presentation.mapper.EvolutionChainRepositoryToUiModelMapper
 import com.salmanseifian.androidpoke.presentation.mapper.PokemonDetailsRepositoryToUiModelMapper
-import com.salmanseifian.androidpoke.presentation.model.EvolutionChainUiModel
 import com.salmanseifian.androidpoke.presentation.model.PokemonDetailsUiModel
 import com.salmanseifian.androidpoke.presentation.model.SpeciesUiModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -27,7 +25,7 @@ import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.verify
-import kotlin.time.ExperimentalTime
+import org.mockito.kotlin.whenever
 
 
 @ExperimentalCoroutinesApi
@@ -105,8 +103,8 @@ class PokemonDetailsViewModelTest {
     fun `When getEvolutionChain then getEvolutionChain invoked with success result`() {
         rule.dispatcher.runBlockingTest {
 
-            val result = Resource.Success(evolutionChainRepositoryModel)
-            val channel = Channel<Resource<EvolutionChainRepositoryModel>>()
+            val result = Result.success(evolutionChainRepositoryModel)
+            val channel = Channel<Result<EvolutionChainRepositoryModel>>()
             val flow = channel.consumeAsFlow()
 
             doReturn(flow)
@@ -138,7 +136,7 @@ class PokemonDetailsViewModelTest {
     @Test
     fun `When getEvolutionChain then getEvolutionChain invoked with failure result`() {
         rule.dispatcher.runBlockingTest {
-            doReturn(Resource.Failure(true, 400, null))
+            doReturn(Result.failure(true, 400, null))
                 .`when`(pokeRepository)
                 .getEvolutionChain(1)
 //
@@ -151,7 +149,7 @@ class PokemonDetailsViewModelTest {
     fun `When getPokemonDetails then getPokemonDetails invoked with success result`() {
         rule.dispatcher.runBlockingTest {
 
-            val result = Resource.Success(
+            val result = Result.success(
                 PokemonDetailsRepositoryModel(
                     "https://pokeapi.co/api/v2/evolution-chain/1/",
                     "A strange seed was\\nplanted on its\\nback at birth.\\fThe plant sprouts\\nand grows with\\nthis POKéMON.",
@@ -160,7 +158,7 @@ class PokemonDetailsViewModelTest {
                 )
             )
 
-            val channel = Channel<Resource<PokemonDetailsRepositoryModel>>()
+            val channel = Channel<Result<PokemonDetailsRepositoryModel>>()
             val flow = channel.consumeAsFlow()
 
             doReturn(flow)
@@ -189,7 +187,7 @@ class PokemonDetailsViewModelTest {
     fun `When getPokemonDetails then getPokemonDetails invoked with failure result`() {
         rule.dispatcher.runBlockingTest {
 
-            val expected400Failure = Resource.Failure(true, 400, null)
+            val expected400Failure = Result.failure(true, 400, null)
 
             doReturn(
                 expected400Failure
@@ -202,5 +200,28 @@ class PokemonDetailsViewModelTest {
 
         }
     }
+
+    @Test
+    fun `should emit error on getPokemonDetails failure`() = rule.dispatcher.runBlockingTest {
+        // GIVEN
+        val result = Result.failure(Exception())
+        val channel = Channel<Result<PokemonDetailsRepositoryModel>>()
+        val flow = channel.consumeAsFlow()
+
+        doReturn(flow)
+            .whenever(pokeRepository)
+            .getPokemonDetails(1)
+
+        // WHEN
+        launch {
+            channel.send(result)
+        }
+
+        cut.getPokemonDetails("https://pokeapi.co/api/v2/pokemon-species/1/")
+
+        // THEN
+        verify(isLoadingObserver).onChanged(true)
+    }
+
 
 }

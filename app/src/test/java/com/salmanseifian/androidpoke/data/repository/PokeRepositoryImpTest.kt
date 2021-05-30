@@ -1,18 +1,19 @@
 package com.salmanseifian.androidpoke.data.repository
 
+import app.cash.turbine.test
 import com.salmanseifian.androidpoke.data_api.PokeService
 import com.salmanseifian.androidpoke.data_api.mapper.EvolutionChainResponseToRepositoryModelMapper
 import com.salmanseifian.androidpoke.data_api.mapper.PokemonDetailsResponseToRepositoryModelMapper
 import com.salmanseifian.androidpoke.data_api.mapper.PokemonSpeciesResponseToRepositoryModelMapper
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.TestCoroutineDispatcher
+import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
-import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.whenever
+import kotlin.time.ExperimentalTime
 
 @RunWith(MockitoJUnitRunner::class)
 class PokeRepositoryImpTest {
@@ -47,14 +48,17 @@ class PokeRepositoryImpTest {
 
 
     @Test
+    @ExperimentalTime
     fun `should get pokemon details on failure`() {
-        runBlocking {
+        testDispatcher.runBlockingTest {
+            whenever(pokeService.getPokemonDetails(1)).thenThrow(Exception())
 
-            doReturn(Throwable())
-                .`when`(pokeService)
-                .getPokemonDetails(1)
+            cut.getPokemonDetails(1).test {
+                expectItem().isFailure
+                expectComplete()
+            }
 
-//            whenever(cut.getEvolutionChain(1)).thenReturn(Resource.Failure(true, null, null))
+
         }
     }
 }
