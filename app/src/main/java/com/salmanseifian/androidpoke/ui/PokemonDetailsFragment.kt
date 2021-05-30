@@ -5,17 +5,14 @@ import android.view.View
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import com.salmanseifian.androidpoke.R
-import com.salmanseifian.androidpoke.data.repository.Resource
 import com.salmanseifian.androidpoke.databinding.FragmentPokemonDetailsBinding
 import com.salmanseifian.androidpoke.presentation.PokemonDetailsViewModel
 import com.salmanseifian.androidpoke.utils.createImageUrl
 import com.salmanseifian.androidpoke.utils.loadUrl
-import com.salmanseifian.androidpoke.utils.toast
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -33,67 +30,28 @@ class PokemonDetailsFragment : Fragment(R.layout.fragment_pokemon_details) {
         val args = PokemonDetailsFragmentArgs.fromBundle(requireArguments())
         val url = args.url
 
-        loadPokemonDetails(url)
-    }
-
-    private fun loadPokemonDetails(url: String) {
-        lifecycleScope.launch(Dispatchers.Main) {
-            viewModel.getPokemonDetails(url).collect {
-                when (it) {
-                    is Resource.Success -> {
-                        binding.progressCircular.isVisible = false
-                        binding.apply {
-                            txtName.text = it.value.name
-                            txtDesc.text = it.value.flavorTextEntries
-                        }
-
-                        it.value.evolutionChainUrl?.let {
-                            loadEvolutionChain(url, it)
-                        }
-                    }
-                    is Resource.Failure -> {
-                        binding.progressCircular.isVisible = false
-                        requireContext().toast(R.string.err_loading_pokemon_details)
-                    }
-
-                    is Resource.Loading -> {
-                        binding.progressCircular.isVisible = true
-                    }
-                }
-            }
+        lifecycleScope.launch {
+            viewModel.getPokemonDetails(url)
         }
-    }
 
-    private fun loadEvolutionChain(speciesUrl: String, evolutionChainUrl: String) {
-        lifecycleScope.launch(Dispatchers.Main) {
-            viewModel.getEvolutionChain(evolutionChainUrl).collect {
-                when (it) {
-                    is Resource.Success -> {
-                        binding.progressCircular.isVisible = false
+        viewModel.isLoading.observe(viewLifecycleOwner, {
+            binding.progressCircular.isVisible = it == true
+        })
 
-                        val evolution =
-                            it.value.evolutions?.firstOrNull { it.first?.url == speciesUrl }?.second
-                        evolution?.let { species ->
-                            binding.img.visibility = View.VISIBLE
-                            binding.txtEvolvesTo.visibility = View.VISIBLE
-                            binding.txtEvolvesToName.visibility = View.VISIBLE
-
-                            binding.img.loadUrl(species.url.createImageUrl())
-                            binding.txtEvolvesToName.text = species.name
-                        }
-                    }
-                    is Resource.Failure -> {
-                        binding.progressCircular.isVisible = false
-                        requireContext().toast(R.string.err_loading_pokemon_details)
-                    }
-
-                    is Resource.Loading -> {
-                        binding.progressCircular.isVisible = true
-                    }
-                }
+        viewModel.pokemonDetails.observe(viewLifecycleOwner, {
+            binding.apply {
+                txtName.text = it.name
+                txtDesc.text = it.flavorTextEntries
             }
-        }
+        })
+
+        viewModel.evolution.observe(viewLifecycleOwner, Observer {
+            binding.img.visibility = View.VISIBLE
+            binding.txtEvolvesTo.visibility = View.VISIBLE
+            binding.txtEvolvesToName.visibility = View.VISIBLE
+
+            binding.img.loadUrl(it.url.createImageUrl())
+            binding.txtEvolvesToName.text = it.name
+        })
     }
-
-
 }

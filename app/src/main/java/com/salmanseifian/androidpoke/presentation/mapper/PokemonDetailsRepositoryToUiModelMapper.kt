@@ -4,12 +4,12 @@ import com.salmanseifian.androidpoke.data.model.PokemonDetailsRepositoryModel
 import com.salmanseifian.androidpoke.presentation.model.PokemonDetailsUiModel
 
 interface PokemonDetailsRepositoryToUiModelMapper {
-    fun toRepositoryModel(pokemonDetailsRepositoryModel: PokemonDetailsRepositoryModel): PokemonDetailsUiModel
+    fun toUiModel(pokemonDetailsRepositoryModel: PokemonDetailsRepositoryModel): PokemonDetailsUiModel
 }
 
 class PokemonDetailsRepositoryToUiModelMapperImpl : PokemonDetailsRepositoryToUiModelMapper {
 
-    override fun toRepositoryModel(pokemonDetailsRepositoryModel: PokemonDetailsRepositoryModel): PokemonDetailsUiModel {
+    override fun toUiModel(pokemonDetailsRepositoryModel: PokemonDetailsRepositoryModel): PokemonDetailsUiModel {
         return PokemonDetailsUiModel(
             pokemonDetailsRepositoryModel.evolutionChainUrl,
             pokemonDetailsRepositoryModel.flavorTextEntries,

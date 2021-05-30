@@ -6,14 +6,14 @@ import com.salmanseifian.androidpoke.presentation.model.SpeciesUiModel
 import javax.inject.Inject
 
 interface EvolutionChainRepositoryToUiModelMapper {
-    fun toRepositoryModel(evolutionChainRepositoryModel: EvolutionChainRepositoryModel): EvolutionChainUiModel
+    fun toUiModel(evolutionChainRepositoryModel: EvolutionChainRepositoryModel): EvolutionChainUiModel
 }
 
 
 class EvolutionChainRepositoryToUiModelMapperImpl @Inject constructor() :
     EvolutionChainRepositoryToUiModelMapper {
 
-    override fun toRepositoryModel(evolutionChainRepositoryModel: EvolutionChainRepositoryModel): EvolutionChainUiModel {
+    override fun toUiModel(evolutionChainRepositoryModel: EvolutionChainRepositoryModel): EvolutionChainUiModel {
 
         return EvolutionChainUiModel(evolutionChainRepositoryModel.evolutions?.map {
             Pair(
