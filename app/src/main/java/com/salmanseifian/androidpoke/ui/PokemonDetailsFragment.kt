@@ -45,7 +45,7 @@ class PokemonDetailsFragment : Fragment(R.layout.fragment_pokemon_details) {
             }
         })
 
-        viewModel.evolution.observe(viewLifecycleOwner, Observer {
+        viewModel.evolution.observe(viewLifecycleOwner, {
             binding.img.visibility = View.VISIBLE
             binding.txtEvolvesTo.visibility = View.VISIBLE
             binding.txtEvolvesToName.visibility = View.VISIBLE

@@ -14,26 +14,25 @@ class EvolutionChainResponseToRepositoryModelMapperImpl @Inject constructor() :
     EvolutionChainResponseToRepositoryModelMapper {
 
     override fun toRepositoryModel(evolutionChainResponse: EvolutionChainResponse): EvolutionChainRepositoryModel {
-        val firstSpecies = evolutionChainResponse.chain?.species
-        val firstEvolution = evolutionChainResponse.chain?.evolvesTo?.first()?.species
 
-        val secondSpecies =
-            evolutionChainResponse.chain?.evolvesTo?.first()?.species
-        val secondEvolution =
-            evolutionChainResponse.chain?.evolvesTo?.first()?.evolvesTo?.first()?.species
+        var chain = evolutionChainResponse.chain
 
-        return EvolutionChainRepositoryModel(
-            listOf(
+        val pairList = mutableListOf<Pair<SpeciesRepositoryModel, SpeciesRepositoryModel>>()
+
+        while (chain != null && !chain.evolvesTo.isNullOrEmpty()) {
+            pairList.add(
                 Pair(
-                    SpeciesRepositoryModel(firstSpecies?.name ?: "", firstSpecies?.url ?: ""),
-                    SpeciesRepositoryModel(firstEvolution?.name ?: "", firstEvolution?.url ?: "")
-                ),
-                Pair(
-                    SpeciesRepositoryModel(secondSpecies?.name ?: "", secondSpecies?.url ?: ""),
-                    SpeciesRepositoryModel(secondEvolution?.name ?: "", secondEvolution?.url ?: "")
+                    SpeciesRepositoryModel(chain.species?.name ?: "", chain.species?.url ?: ""),
+                    SpeciesRepositoryModel(
+                        chain.evolvesTo!![0].species?.name ?: "",
+                        chain.evolvesTo!![0].species?.url ?: ""
+                    )
                 )
             )
-        )
+            chain = chain.evolvesTo?.get(0)
+        }
+
+        return EvolutionChainRepositoryModel(pairList)
     }
 
 }

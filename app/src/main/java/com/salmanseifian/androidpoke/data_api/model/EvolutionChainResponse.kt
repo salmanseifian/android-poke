@@ -7,7 +7,7 @@ data class EvolutionChainResponse(
     @SerializedName("baby_trigger_item")
     val babyTriggerItem: Any?,
     @SerializedName("chain")
-    val chain: Chain?,
+    val chain: EvolvesTo?,
     @SerializedName("id")
     val id: Int?
 )
@@ -27,21 +27,13 @@ data class EvolvesTo(
     @SerializedName("evolution_details")
     val evolutionDetails: List<EvolutionDetail>?,
     @SerializedName("evolves_to")
-    val evolvesTo: List<EvolvesToX>?,
+    val evolvesTo: List<EvolvesTo>?,
     @SerializedName("is_baby")
     val isBaby: Boolean?,
     @SerializedName("species")
     val species: Species?
 )
 
-data class EvolvesToX(
-    @SerializedName("evolution_details")
-    val evolutionDetails: List<EvolutionDetail>?,
-    @SerializedName("is_baby")
-    val isBaby: Boolean?,
-    @SerializedName("species")
-    val species: Species?
-)
 
 data class Species(
     @SerializedName("name")
