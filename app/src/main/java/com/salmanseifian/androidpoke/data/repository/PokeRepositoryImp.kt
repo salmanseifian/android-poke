@@ -15,9 +15,7 @@ import com.salmanseifian.androidpoke.data_api.mapper.PokemonDetailsResponseToRep
 import com.salmanseifian.androidpoke.data_api.mapper.PokemonSpeciesResponseToRepositoryModelMapper
 import com.salmanseifian.androidpoke.utils.NETWORK_PAGE_SIZE
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.flow.*
 import retrofit2.HttpException
 import javax.inject.Inject
 
@@ -46,21 +44,23 @@ class PokeRepositoryImp @Inject constructor(
         }
     }
 
-    override suspend fun getPokemonDetails(id: Int): Resource<PokemonDetailsRepositoryModel> {
-        return withContext(ioDispatcher) {
-            try {
+    override fun getPokemonDetails(id: Int): Flow<Resource<PokemonDetailsRepositoryModel>> {
+        return flow {
+            emit(
                 Resource.Success(
                     pokemonDetailsResponseToRepositoryModelMapperImp.toRepositoryModel(
                         pokeService.getPokemonDetails(id)
                     )
                 )
-            } catch (throwable: Throwable) {
-                when (throwable) {
+            )
+        }
+            .catch {
+                when (it) {
                     is HttpException -> {
                         Resource.Failure(
                             false,
-                            throwable.code(),
-                            throwable.response()?.errorBody()
+                            it.code(),
+                            it.response()?.errorBody()
                         )
                     }
                     else -> {
@@ -68,24 +68,26 @@ class PokeRepositoryImp @Inject constructor(
                     }
                 }
             }
-        }
+            .flowOn(ioDispatcher)
     }
 
-    override suspend fun getEvolutionChain(chainId: Int): Resource<EvolutionChainRepositoryModel> {
-        return withContext(ioDispatcher) {
-            try {
+    override fun getEvolutionChain(chainId: Int): Flow<Resource<EvolutionChainRepositoryModel>> {
+        return flow {
+            emit(
                 Resource.Success(
                     evolutionChainResponseToRepositoryModelMapper.toRepositoryModel(
                         pokeService.getEvolutionChain(chainId)
                     )
                 )
-            } catch (throwable: Throwable) {
-                when (throwable) {
+            )
+        }
+            .catch {
+                when (it) {
                     is HttpException -> {
                         Resource.Failure(
                             false,
-                            throwable.code(),
-                            throwable.response()?.errorBody()
+                            it.code(),
+                            it.response()?.errorBody()
                         )
                     }
                     else -> {
@@ -93,6 +95,8 @@ class PokeRepositoryImp @Inject constructor(
                     }
                 }
             }
-        }
+            .flowOn(ioDispatcher)
+
     }
+
 }

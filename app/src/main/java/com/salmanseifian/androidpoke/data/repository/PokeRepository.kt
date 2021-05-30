@@ -10,9 +10,9 @@ interface PokeRepository {
 
     fun getAllPokemonSpecies(): Flow<PagingData<SpeciesRepositoryModel>>
 
-    suspend fun getPokemonDetails(id: Int): Resource<PokemonDetailsRepositoryModel>
+    fun getPokemonDetails(id: Int): Flow<Resource<PokemonDetailsRepositoryModel>>
 
-    suspend fun getEvolutionChain(chainId: Int): Resource<EvolutionChainRepositoryModel>
+    fun getEvolutionChain(chainId: Int): Flow<Resource<EvolutionChainRepositoryModel>>
 }
 
 
