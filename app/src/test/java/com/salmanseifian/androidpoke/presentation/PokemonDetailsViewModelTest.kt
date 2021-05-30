@@ -26,6 +26,7 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
+import org.amshove.kluent.shouldBeEqualTo
 
 
 @ExperimentalCoroutinesApi
@@ -136,7 +137,7 @@ class PokemonDetailsViewModelTest {
     @Test
     fun `When getEvolutionChain then getEvolutionChain invoked with failure result`() {
         rule.dispatcher.runBlockingTest {
-            doReturn(Result.failure(true, 400, null))
+            doReturn(Result.failure<PokemonDetailsRepositoryModel>(Throwable()))
                 .`when`(pokeRepository)
                 .getEvolutionChain(1)
 //
@@ -186,17 +187,12 @@ class PokemonDetailsViewModelTest {
     @Test
     fun `When getPokemonDetails then getPokemonDetails invoked with failure result`() {
         rule.dispatcher.runBlockingTest {
-
-            val expected400Failure = Result.failure(true, 400, null)
-
             doReturn(
-                expected400Failure
+                Result.failure<Throwable>(Throwable())
             )
                 .`when`(pokeRepository)
                 .getPokemonDetails(1)
 
-
-//            assertEquals(secondItem, expected400Failure)
 
         }
     }
@@ -204,7 +200,7 @@ class PokemonDetailsViewModelTest {
     @Test
     fun `should emit error on getPokemonDetails failure`() = rule.dispatcher.runBlockingTest {
         // GIVEN
-        val result = Result.failure(Exception())
+        val result = Result.failure<PokemonDetailsRepositoryModel>(Throwable())
         val channel = Channel<Result<PokemonDetailsRepositoryModel>>()
         val flow = channel.consumeAsFlow()
 
