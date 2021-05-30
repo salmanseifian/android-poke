@@ -54,7 +54,7 @@ class PokeRepositoryImpTest {
                 .`when`(pokeService)
                 .getPokemonDetails(1)
 
-            whenever(cut.getEvolutionChain(1)).thenReturn(Resource.Failure(true, null, null))
+//            whenever(cut.getEvolutionChain(1)).thenReturn(Resource.Failure(true, null, null))
         }
     }
 }
