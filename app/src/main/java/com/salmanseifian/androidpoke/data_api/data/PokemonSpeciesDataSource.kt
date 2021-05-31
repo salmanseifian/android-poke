@@ -25,7 +25,7 @@ class PokemonSpeciesDataSource constructor(
             val allSpecies = response.pokemonSpecies
             LoadResult.Page(
                 data = allSpecies,
-                prevKey = if (offset == STARTING_OFFSET_INDEX) null else offset - loadSize,
+                prevKey = if (response.previous == null || offset == STARTING_OFFSET_INDEX) null else offset - loadSize,
                 nextKey = if (response.next == null) null else offset + loadSize
             )
         } catch (exception: IOException) {
