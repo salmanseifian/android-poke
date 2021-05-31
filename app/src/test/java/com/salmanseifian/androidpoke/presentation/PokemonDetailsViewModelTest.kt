@@ -9,6 +9,7 @@ import com.salmanseifian.androidpoke.data.model.SpeciesRepositoryModel
 import com.salmanseifian.androidpoke.data.repository.PokeRepository
 import com.salmanseifian.androidpoke.presentation.mapper.EvolutionChainRepositoryToUiModelMapper
 import com.salmanseifian.androidpoke.presentation.mapper.PokemonDetailsRepositoryToUiModelMapper
+import com.salmanseifian.androidpoke.presentation.model.EvolutionChainUiModel
 import com.salmanseifian.androidpoke.presentation.model.PokemonDetailsUiModel
 import com.salmanseifian.androidpoke.presentation.model.SpeciesUiModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -19,47 +20,47 @@ import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.junit.rules.TestRule
-import org.junit.runner.RunWith
-import org.mockito.Mock
-import org.mockito.junit.MockitoJUnitRunner
-import org.mockito.kotlin.doReturn
-import org.mockito.kotlin.verify
-import org.mockito.kotlin.whenever
-import org.amshove.kluent.shouldBeEqualTo
+import org.mockito.kotlin.*
 
 
-@ExperimentalCoroutinesApi
-@RunWith(MockitoJUnitRunner::class)
 class PokemonDetailsViewModelTest {
-
-    private lateinit var cut: PokemonDetailsViewModel
 
     @get:Rule
     val rule = CoroutineTestRule()
 
     @get:Rule
-    val testInstantTaskExecutorRule: TestRule = InstantTaskExecutorRule()
+    val instantExecutorRule = InstantTaskExecutorRule()
+
+    private val pokeRepository = mock<PokeRepository>()
+
+    private val pokemonDetailsRepositoryToUiModelMapper =
+        mock<PokemonDetailsRepositoryToUiModelMapper>()
+
+    private val evolutionChainRepositoryToUiModelMapper =
+        mock<EvolutionChainRepositoryToUiModelMapper>()
+
+    private val pokemonDetailsObserver = mock<Observer<PokemonDetailsUiModel>>()
 
 
-    @Mock
-    private lateinit var pokeRepository: PokeRepository
+    private val speciesUiModelObserver = mock<Observer<SpeciesUiModel>>()
 
-    @Mock
-    private lateinit var pokemonDetailsRepositoryToUiModelMapper: PokemonDetailsRepositoryToUiModelMapper
-
-    @Mock
-    private lateinit var evolutionChainRepositoryToUiModelMapper: EvolutionChainRepositoryToUiModelMapper
+    private val isLoadingObserver = mock<Observer<Boolean>>()
 
 
-    @Mock
-    private lateinit var pokemonDetailsObserver: Observer<PokemonDetailsUiModel>
+    private val pokemonDetailsRepositoryModel = PokemonDetailsRepositoryModel(
+        "https://pokeapi.co/api/v2/evolution-chain/1/",
+        "desc",
+        1,
+        "bulbasaur"
+    )
 
-    @Mock
-    private lateinit var speciesUiModelObserver: Observer<SpeciesUiModel>
 
-    @Mock
-    private lateinit var isLoadingObserver: Observer<Boolean>
+    private val pokemonDetailsUiModel = PokemonDetailsUiModel(
+        "https://pokeapi.co/api/v2/evolution-chain/1/",
+        "desc",
+        1,
+        "bulbasaur"
+    )
 
 
     private val evolutionChainRepositoryModel = EvolutionChainRepositoryModel(
@@ -84,12 +85,38 @@ class PokemonDetailsViewModelTest {
                 )
             )
         )
-
     )
+
+    private val evolutionChainUiModel = EvolutionChainUiModel(
+        listOf(
+            Pair(
+                SpeciesUiModel(
+                    "bulbasaur",
+                    "https://pokeapi.co/api/v2/pokemon-species/1/"
+                ), SpeciesUiModel(
+                    "ivysaur",
+                    "https://pokeapi.co/api/v2/pokemon-species/2/"
+                )
+            ),
+            Pair(
+                SpeciesUiModel(
+                    "ivysaur",
+                    "https://pokeapi.co/api/v2/pokemon-species/2/"
+                ),
+                SpeciesUiModel(
+                    "venusaur",
+                    "https://pokeapi.co/api/v2/pokemon-species/3/"
+                )
+            )
+        )
+    )
+
+
+    private lateinit var pokemonDetailsViewModel: PokemonDetailsViewModel
 
     @Before
     fun setUp() {
-        cut = PokemonDetailsViewModel(
+        pokemonDetailsViewModel = PokemonDetailsViewModel(
             pokeRepository,
             pokemonDetailsRepositoryToUiModelMapper,
             evolutionChainRepositoryToUiModelMapper
@@ -101,10 +128,98 @@ class PokemonDetailsViewModelTest {
     }
 
     @Test
-    fun `When getEvolutionChain then getEvolutionChain invoked with success result`() {
+    fun `should emit pokemon details on success`() = rule.dispatcher.runBlockingTest {
+
+        val result = Result.success(pokemonDetailsRepositoryModel)
+
+        val channel = Channel<Result<PokemonDetailsRepositoryModel>>()
+        val flow = channel.consumeAsFlow()
+
+        doReturn(flow)
+            .`when`(pokeRepository)
+            .getPokemonDetails(1)
+
+
+
+        whenever(pokemonDetailsRepositoryToUiModelMapper.toUiModel(pokemonDetailsRepositoryModel)).thenReturn(
+            pokemonDetailsUiModel
+        )
+
+        launch {
+            channel.send(result)
+        }
+
+        pokemonDetailsViewModel.getPokemonDetails("https://pokeapi.co/api/v2/pokemon-species/1/")
+
+
+        verify(pokeRepository, times(1)).getPokemonDetails(1)
+
+
+        verify(pokemonDetailsObserver).onChanged(pokemonDetailsUiModel)
+    }
+
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `should emit error on getPokemonDetails failure`() = rule.dispatcher.runBlockingTest {
+        val result = Result.failure<PokemonDetailsRepositoryModel>(RuntimeException())
+        val channel = Channel<Result<PokemonDetailsRepositoryModel>>()
+        val flow = channel.consumeAsFlow()
+
+        doReturn(flow)
+            .whenever(pokeRepository)
+            .getPokemonDetails(1)
+
+        launch {
+            channel.send(result)
+        }
+
+        pokemonDetailsViewModel.getPokemonDetails("https://pokeapi.co/api/v2/pokemon-species/1/")
+
+        verify(isLoadingObserver).onChanged(false)
+    }
+
+    @Test
+    fun `should  emit getEvolutionChain on success`() =
         rule.dispatcher.runBlockingTest {
 
             val result = Result.success(evolutionChainRepositoryModel)
+            val channel = Channel<Result<EvolutionChainRepositoryModel>>()
+            val flow = channel.consumeAsFlow()
+
+            doReturn(flow)
+                .`when`(pokeRepository)
+                .getEvolutionChain(1)
+
+            whenever(evolutionChainRepositoryToUiModelMapper.toUiModel(evolutionChainRepositoryModel)).thenReturn(
+                evolutionChainUiModel
+            )
+
+
+            launch {
+                channel.send(result)
+            }
+
+            pokemonDetailsViewModel.getEvolutionChain(
+                "https://pokeapi.co/api/v2/pokemon-species/1/",
+                "https://pokeapi.co/api/v2/evolution-chain/1/"
+            )
+
+            verify(speciesUiModelObserver).onChanged(
+                SpeciesUiModel(
+                    "ivysaur",
+                    "https://pokeapi.co/api/v2/pokemon-species/2/"
+                )
+            )
+
+        }
+
+
+    @Test
+    fun `should emit error on getEvolutionChain failure`() =
+        rule.dispatcher.runBlockingTest {
+
+            val result = Result.failure<EvolutionChainRepositoryModel>(RuntimeException())
             val channel = Channel<Result<EvolutionChainRepositoryModel>>()
             val flow = channel.consumeAsFlow()
 
@@ -117,107 +232,14 @@ class PokemonDetailsViewModelTest {
                 channel.send(result)
             }
 
-            cut.getEvolutionChain(
+            pokemonDetailsViewModel.getEvolutionChain(
                 "https://pokeapi.co/api/v2/pokemon-species/1/",
                 "https://pokeapi.co/api/v2/evolution-chain/1/"
             )
 
-            verify(speciesUiModelObserver).onChanged(
-                SpeciesUiModel(
-                    "ivysaur",
-                    "https://pokeapi.co/api/v2/pokemon-species/2/"
-                )
-            )
-
+            verify(isLoadingObserver).onChanged(false)
 
         }
-    }
-
-
-    @Test
-    fun `When getEvolutionChain then getEvolutionChain invoked with failure result`() {
-        rule.dispatcher.runBlockingTest {
-            doReturn(Result.failure<PokemonDetailsRepositoryModel>(Throwable()))
-                .`when`(pokeRepository)
-                .getEvolutionChain(1)
-//
-//            assertEquals(secondItem, Resource.Failure(true, 400, null))
-
-        }
-    }
-
-    @Test
-    fun `When getPokemonDetails then getPokemonDetails invoked with success result`() {
-        rule.dispatcher.runBlockingTest {
-
-            val result = Result.success(
-                PokemonDetailsRepositoryModel(
-                    "https://pokeapi.co/api/v2/evolution-chain/1/",
-                    "A strange seed was\\nplanted on its\\nback at birth.\\fThe plant sprouts\\nand grows with\\nthis POKéMON.",
-                    1,
-                    "bulbasaur"
-                )
-            )
-
-            val channel = Channel<Result<PokemonDetailsRepositoryModel>>()
-            val flow = channel.consumeAsFlow()
-
-            doReturn(flow)
-                .`when`(pokeRepository)
-                .getPokemonDetails(1)
-
-            launch {
-                channel.send(result)
-            }
-
-            cut.getPokemonDetails("https://pokeapi.co/api/v2/pokemon-species/1/")
-
-            val expected = PokemonDetailsUiModel(
-                "https://pokeapi.co/api/v2/evolution-chain/1/",
-                "A strange seed was\\nplanted on its\\nback at birth.\\fThe plant sprouts\\nand grows with\\nthis POKéMON.",
-                1,
-                "bulbasaur"
-            )
-
-            verify(pokemonDetailsObserver).onChanged(expected)
-
-        }
-    }
-
-    @Test
-    fun `When getPokemonDetails then getPokemonDetails invoked with failure result`() {
-        rule.dispatcher.runBlockingTest {
-            doReturn(
-                Result.failure<Throwable>(Throwable())
-            )
-                .`when`(pokeRepository)
-                .getPokemonDetails(1)
-
-
-        }
-    }
-
-    @Test
-    fun `should emit error on getPokemonDetails failure`() = rule.dispatcher.runBlockingTest {
-        // GIVEN
-        val result = Result.failure<PokemonDetailsRepositoryModel>(Throwable())
-        val channel = Channel<Result<PokemonDetailsRepositoryModel>>()
-        val flow = channel.consumeAsFlow()
-
-        doReturn(flow)
-            .whenever(pokeRepository)
-            .getPokemonDetails(1)
-
-        // WHEN
-        launch {
-            channel.send(result)
-        }
-
-        cut.getPokemonDetails("https://pokeapi.co/api/v2/pokemon-species/1/")
-
-        // THEN
-        verify(isLoadingObserver).onChanged(true)
-    }
 
 
 }

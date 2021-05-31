@@ -5,15 +5,12 @@ import android.view.View
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
-import androidx.lifecycle.lifecycleScope
 import com.salmanseifian.androidpoke.R
 import com.salmanseifian.androidpoke.databinding.FragmentPokemonDetailsBinding
 import com.salmanseifian.androidpoke.presentation.PokemonDetailsViewModel
 import com.salmanseifian.androidpoke.utils.createImageUrl
 import com.salmanseifian.androidpoke.utils.loadUrl
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class PokemonDetailsFragment : Fragment(R.layout.fragment_pokemon_details) {
@@ -30,9 +27,7 @@ class PokemonDetailsFragment : Fragment(R.layout.fragment_pokemon_details) {
         val args = PokemonDetailsFragmentArgs.fromBundle(requireArguments())
         val url = args.url
 
-        lifecycleScope.launch {
-            viewModel.getPokemonDetails(url)
-        }
+        viewModel.getPokemonDetails(url)
 
         viewModel.isLoading.observe(viewLifecycleOwner, {
             binding.progressCircular.isVisible = it == true

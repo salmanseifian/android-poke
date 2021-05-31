@@ -3,6 +3,7 @@ package com.salmanseifian.androidpoke.presentation
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.salmanseifian.androidpoke.data.repository.PokeRepository
 import com.salmanseifian.androidpoke.presentation.mapper.EvolutionChainRepositoryToUiModelMapper
 import com.salmanseifian.androidpoke.presentation.mapper.PokemonDetailsRepositoryToUiModelMapper
@@ -11,6 +12,7 @@ import com.salmanseifian.androidpoke.presentation.model.SpeciesUiModel
 import com.salmanseifian.androidpoke.utils.extractSpeciesId
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -30,46 +32,56 @@ class PokemonDetailsViewModel @Inject constructor(
     private val _isLoading = MutableLiveData(true)
     val isLoading: LiveData<Boolean> = _isLoading
 
-    suspend fun getPokemonDetails(url: String) {
-        val id = url.extractSpeciesId()
+    fun getPokemonDetails(url: String) {
+        viewModelScope.launch {
+            val id = url.extractSpeciesId()
+            pokeRepository.getPokemonDetails(id.toInt())
+                .collect { result ->
+                    when {
+                        result.isSuccess -> {
+                            _isLoading.value = false
 
-        pokeRepository.getPokemonDetails(id.toInt())
-            .collect { result ->
-                when {
-                    result.isSuccess -> {
-                        _isLoading.value = false
-                        _pokemonDetails.value =
-                            pokemonDetailsRepositoryToUiModelMapper.toUiModel(result.getOrThrow())
-                        result.getOrNull()?.evolutionChainUrl?.let {
-                            getEvolutionChain(url, it)
+                            result.getOrNull()?.let {
+                                _pokemonDetails.value =
+                                    pokemonDetailsRepositoryToUiModelMapper.toUiModel(it)
+                                getEvolutionChain(url, it.evolutionChainUrl)
+                            }
+                        }
+
+                        result.isFailure -> {
+                            _isLoading.value = false
                         }
                     }
-
-                    result.isFailure -> {
-                        _isLoading.value = false
-                    }
                 }
-            }
+        }
     }
 
-    suspend fun getEvolutionChain(url: String, chainUrl: String) {
-        val chainId = chainUrl.extractSpeciesId()
-        pokeRepository.getEvolutionChain(chainId.toInt()).collect { result ->
-            when {
-                result.isSuccess -> {
-                    _isLoading.value = false
-                    val uiModel =
-                        evolutionChainRepositoryToUiModelMapper.toUiModel(result.getOrThrow())
-                    uiModel.evolutions?.firstOrNull { it.first?.url == url }?.second?.let {
-                        _evolution.value = it
-                    }
-                }
+    fun getEvolutionChain(url: String, chainUrl: String?) {
+        chainUrl?.let {
+            viewModelScope.launch {
+                val chainId = it.extractSpeciesId()
+                pokeRepository.getEvolutionChain(chainId.toInt()).collect { result ->
+                    when {
+                        result.isSuccess -> {
+                            _isLoading.value = false
+                            result.getOrNull()?.let {
+                                val uiModel =
+                                    evolutionChainRepositoryToUiModelMapper.toUiModel(it)
+                                uiModel.evolutions?.firstOrNull { it.first?.url == url }?.second?.let {
+                                    _evolution.value = it
+                                }
+                            }
 
-                result.isFailure -> {
-                    _isLoading.value = false
+                        }
+
+                        result.isFailure -> {
+                            _isLoading.value = false
+                        }
+                    }
                 }
             }
         }
+
     }
 
 }
