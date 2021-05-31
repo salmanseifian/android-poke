@@ -11,7 +11,6 @@ import com.salmanseifian.androidpoke.data.repository.PokeRepository
 import com.salmanseifian.androidpoke.presentation.mapper.PokemonSpeciesRepositoryToUiModelMapper
 import com.salmanseifian.androidpoke.presentation.model.SpeciesUiModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -35,7 +34,6 @@ class SpeciesViewModel @Inject constructor(
         viewModelScope.launch {
             pokeRepository.getAllPokemonSpecies()
                 .cachedIn(viewModelScope)
-                .catch { }
                 .collect {
                     val speciesUiModel = it.map {
                         pokemonSpeciesRepositoryToUiModelMapper.toUiModel(it)
